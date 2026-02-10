@@ -12,7 +12,7 @@ use App\Http\Controllers\PrincipalController;
 Route::get('/hello',HomeController::class);
 Route::get('post/mensaje',[PostController::class, 'Mensaje']);
 Route::get('post/about/{param?}/{name?}', [PostController::class, 'About']);
-Route::get('/empresa',[HomeController::class,'empresa'])->name('empresa');
+Route::get('/inicio',[HomeController::class,'inicio'])->name('inicio');
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,3 +23,4 @@ Route::get('/contact', function () {
     return view('contact', ['nombre' => $nombre,'carrera' => 'Doctor en Sistemas 
         Computacionales']);
 })->name('contact');
+
