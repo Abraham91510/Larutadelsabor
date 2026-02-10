@@ -89,27 +89,27 @@
 
 @yield('carrusel')
 
-<div class="container-fluid px-0 py-5 text-center">
+<div class="container-fluid px-0 py-5 text-center overflow-hidden">
     @yield('contenedor1')
 </div>
 
-<div class="container-fluid px-0 py-5 text-center">
+<div class="container-fluid px-0 py-5 text-center overflow-hidden">
     @yield('contenedor2')
 </div>
 
-<div class="container-fluid px-0 py-5 text-center">
+<div class="container-fluid px-0 py-5 text-center overflow-hidden">
     @yield('contenedor3')
 </div>
 
-<div class="container-fluid px-0 py-5 text-center">
+<div class="container-fluid px-0 py-5 text-center overflow-hidden">
     @yield('contenedor4')
 </div>
 
-<div class="container-fluid px-0 py5 text-center">
+<div class="container-fluid px-0 py-5 text-center overflow-hidden">
     @yield('contenedor5')
 </div>
 
-<div class="container-fluid px-0 py-5 text-center">
+<div class="container-fluid px-0 py-5 text-center overflow-hidden">
     @yield('contenedor6')
 </div>
 
