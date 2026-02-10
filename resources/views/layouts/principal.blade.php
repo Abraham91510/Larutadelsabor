@@ -120,12 +120,23 @@
 
         <div class="row gy-4">
 
+           
             <div class="col-md-4">
                 <div class="d-flex align-items-center mb-3">
+
                     <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-2"
-                         style="width: 40px; height: 40px;">
-                        <i class="bi bi-shop text-dark"></i>
+                         style="width: 40px; height: 40px; overflow: hidden;">
+
+                        @isset($logo_empresa)
+                            <img src="{{ asset($logo_empresa) }}"
+                                 alt="Logo {{ $nombre_empresa ?? 'Empresa' }}"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;">
+                        @else
+                            <i class="bi bi-shop text-dark"></i>
+                        @endisset
                     </div>
+
                     <h5 class="mb-0 fw-bold text-dark">
                         {{ $nombre_empresa ?? 'Empresa' }}
                     </h5>
@@ -140,11 +151,12 @@
                     "{{ $actividad ?? 'Sistema web' }}"
                 </p>
             </div>
-            
+
+           
             <div class="col-md-3">
                 <h6 class="fw-bold mb-3 text-dark">Enlaces</h6>
                 <ul class="list-unstyled small">
-                    <li>
+                    <li class="mb-2">
                         <i class="bi bi-house me-1 text-dark"></i>
                         <a href="{{ route('inicio') }}" class="text-dark text-decoration-none">
                             Inicio
@@ -152,27 +164,28 @@
                     </li>
                     <li>
                         <i class="bi bi-question-circle me-1 text-dark"></i>
-                        <a href="#" class="text-dark text-decoration-none">
+                        <a href="{{ route('inicio') }}" class="text-dark text-decoration-none">
                             Ayuda
                         </a>
                     </li>
                 </ul>
             </div>
 
+            
             <div class="col-md-5">
                 <h6 class="fw-bold mb-3 text-dark">Información</h6>
 
                 <ul class="list-unstyled small text-dark">
                     <li class="mb-2">
-                        <i class="bi bi-person-fill me-2 text-dark"></i>
+                        <i class="bi bi-person-fill me-2"></i>
                         <strong>Autor:</strong> {{ $nombre }}
                     </li>
                     <li class="mb-2">
-                        <i class="bi bi-calendar-event me-2 text-dark"></i>
+                        <i class="bi bi-calendar-event me-2"></i>
                         <strong>Fecha:</strong> {{ $fecha }}
                     </li>
                     <li>
-                        <i class="bi bi-file-earmark-text me-2 text-dark"></i>
+                        <i class="bi bi-file-earmark-text me-2"></i>
                         <strong>Actividad:</strong> {{ $actividad }}
                     </li>
                 </ul>
@@ -180,8 +193,9 @@
 
         </div>
 
+
         <div class="text-center text-dark small mt-4 pb-3 border-top pt-3">
-            © {{ date('Y') }} {{ $nombre_empresa }}. Todos los derechos reservados.
+            © {{ date('Y') }} {{ $nombre_empresa ?? 'Empresa' }}. Todos los derechos reservados.
         </div>
 
     </div>

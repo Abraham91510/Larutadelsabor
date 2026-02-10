@@ -20,6 +20,7 @@ class HomeController extends Controller
         $datos["fecha"] = "2026-02-10";
         $datos["actividad"] = "Pagina principal";
         $datos["nombre_empresa"] = "La Ruta del Sabor";
+        $datos["logo_empresa"] = "Imagenes\La Ruta Del Sabor_Logo.png";
 
         return view('inicio', $datos);
     }
