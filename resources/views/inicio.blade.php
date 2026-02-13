@@ -1,5 +1,7 @@
 @extends('layouts.principal')
 @section('titulopagina', 'La Ruta Del Sabor')
+@section('favicon', 'Imagenes/La Ruta Del Sabor_Logo.ico')
+
 @push('css')
     <style>
         .fondo{
@@ -19,6 +21,13 @@
             font-family: 'Aptos', sans-serif !important;
         }
 
+        .social-hover:hover,
+        .link-hover:hover {
+            color: #FFC107 !important;
+            transform: scale(1.2);
+            transition: all 0.3s ease;
+        }
+
     </style>
 @endpush
 
@@ -30,23 +39,23 @@
     Página E-commerce Oficial.
 @endsection
 
-@section('carrusel')
+@section('carrusel_pagina_principal')
 <x-carrusel>
     <x-slot name="titulo1">Apoya la Economía Local</x-slot>
     <x-slot name="texto1">Compra productos locales de comida y ayuda a crecer a tu comunidad.</x-slot>
     <x-slot name="imagen1">/Imagenes/imagen05.jpg</x-slot>
     <x-slot name="icono1"><i class="bi bi-hand-thumbs-up fs-3"></i></x-slot>
 
-    <x-slot name="titulo2">Prueba la nueva Hambuergesa "Magnificarne"</x-slot>
+    <x-slot name="titulo2">Prueba la nueva Hamburguesa "Magnificarne"</x-slot>
     <x-slot name="texto2">Producto 100% con carne natural a 99 MXN.</x-slot>
     <x-slot name="imagen2">/Imagenes/imagen06.png</x-slot>
     <x-slot name="icono2"><i class="bi bi-basket2-fill fs-3"></i></x-slot>
 </x-carrusel>
 @endsection
 
-@section('contenedor1')
+@section('contenedor_quienes_somos')
 <x-cuadro>
-    <x-slot name="titulo">¿Quiénes Somos</x-slot>
+    <x-slot name="titulo">¿Quiénes Somos?</x-slot>
     <x-slot name="subtitulo">Nuestra identidad como empresa</x-slot>
     <x-slot name="color_titulo">#FFD700</x-slot>
     <x-slot name="color_subtitulo">#FFFFFF</x-slot>
@@ -54,7 +63,7 @@
 
     <div class="row g-4">
 
-        <x-card2>
+        <x-card6>
         <x-slot name="bg">bg-white</x-slot>
         <x-slot name="icono"><i class="bi bi-bullseye"></i></x-slot>
         <x-slot name="color_icono">text-success</x-slot>
@@ -70,9 +79,12 @@
             de movilidad de bajo impacto, fortaleciendo la economía local y
             el consumo responsable dentro de la comunidad.
         </x-slot>
-    </x-card2>
+         <x-slot name="posicion_Imagen">izquierda</x-slot>
+        <x-slot name="imagen">/Imagenes/imagen12.png</x-slot>
 
-    <x-card2>
+    </x-card6>
+
+    <x-card6>
         <x-slot name="bg">bg-white</x-slot>
         <x-slot name="icono"><i class="bi bi-eye"></i></x-slot>
         <x-slot name="color_icono">text-primary</x-slot>
@@ -95,9 +107,11 @@
             los comerciantes ambulantes y contribuir a ciudades más
             cercanas, dinámicas y ambientalmente responsables.
         </x-slot>
-    </x-card2>
+        <x-slot name="posicion_Imagen">derecha</x-slot>
+        <x-slot name="imagen">Imagenes/imagen13.png</x-slot>
+    </x-card6>
 
-    <x-card2>
+    <x-card6>
         <x-slot name="bg">bg-white</x-slot>
         <x-slot name="icono"><i class="bi bi-flag"></i></x-slot>
         <x-slot name="color_icono">text-warning</x-slot>
@@ -113,12 +127,14 @@
             una experiencia accesible e inclusiva para todos los usuarios.
 
         </x-slot>
-    </x-card2>
+         <x-slot name="posicion_Imagen">izquierda</x-slot>
+        <x-slot name="imagen">Imagenes\imagen11.png</x-slot>
+    </x-card6>
          </div>
 </x-cuadro> 
 @endsection
 
-@section('contenedor2')
+@section('contenedor_porque_elegirnos')
 <div class="text-center mb-5">
     <h1 class="fw-bold">¿Por qué elegirnos?</h1>
     <h2 class="text-muted">
@@ -175,14 +191,14 @@
         </div>
 @endsection
 
-@section('contenedor3')
+@section('contenedor_beneficios')
 <x-cuadro>
     <x-slot name="titulo">Beneficios</x-slot>
     <x-slot name="subtitulo">
         La Ruta del Sabor incluye la opción de asociar una cuenta bancaria virtual
         en un banco participante para quienes no cuenten con una
     </x-slot>
-    <x-slot name="color_titulo">#FFD700</x-slot>
+    <x-slot name="color_titulo">#0A0A0A</x-slot>
     <x-slot name="color_subtitulo">#FFFFFF</x-slot>
     <x-slot name="background">#FF8C42</x-slot>
 
@@ -216,7 +232,7 @@
 @endsection
 
 
-@section('contenedor4')
+@section('contenedor_tipos_servicios')
     
     <div class="text-center mb-5">
         <h2 class="fw-bold">Tipos de servicios</h2>
@@ -270,7 +286,7 @@
 
 @endsection
 
-@section('contenedor5')
+@section('contenedor_comerciantes_destacados')
 <x-cuadro>
     <x-slot name="titulo">Comerciantes Destacados</x-slot>
 
@@ -336,7 +352,7 @@
 </x-cuadro>
 @endsection
 
-@section('contenedor6')
+@section('contenedor_estadistica_crecimiento_empresa')
 <div class="row g-4">
 
     <x-estadistica>

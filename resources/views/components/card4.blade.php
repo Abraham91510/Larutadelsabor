@@ -4,20 +4,23 @@
     'titulo' => 'Título del beneficio',
     'texto' => 'Descripción del beneficio',
     'orientacion' => 'vertical',
-    'bg' => 'bg-white' 
+    'bg' => 'bg-white'
 ])
 
 <div class="col-md-4">
-    <div class="card {{ $bg }} border-0 shadow-lg rounded-5 p-4 h-100 {{ $orientacion === 'horizontal' ? 'd-flex flex-row align-items-center gap-3' : '' }}">
-        
-        <div class="{{ $color_icono }} fs-1 mb-3 {{ $orientacion === 'horizontal' ? 'flex-shrink-0' : 'text-center' }}">
+    <div class="card {{ $bg }} border-0 shadow-lg rounded-5 p-4 h-100"
+    style="transition: all .3s ease;"
+    onmouseover="this.style.transform='translateY(-10px)'; this.classList.add('shadow-xl')"
+    onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow-xl')">
+        <div class="{{ $color_icono }} fs-1 mb-3 text-center">
             {!! $icono !!}
         </div>
 
-        <div class="{{ $orientacion === 'horizontal' ? '' : 'text-center' }}">
-            <h5 class="fw-bold">{{ $titulo }}</h5>
-            <p class="text-dark mb-0">{{ $texto }}</p>
-        </div>
+        <h5 class="fw-bold text-center mb-2">{{ $titulo }}</h5>
 
+        <div class="text-start">
+            {!! $texto !!}
+        </div>
     </div>
 </div>
+

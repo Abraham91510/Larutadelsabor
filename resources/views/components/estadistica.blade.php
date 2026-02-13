@@ -1,6 +1,8 @@
 @props([])
 
-<div class="col-md-3 text-center">
+<div class="col-md-3 text-center" style="transition: all .3s ease;"
+         onmouseover="this.style.transform='translateY(-10px)'; this.classList.add('shadow-xl')"
+         onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow-xl')">
 
     @isset($icono)
         <div class="mb-2 fs-1 {{ $color ?? 'text-primary' }}">

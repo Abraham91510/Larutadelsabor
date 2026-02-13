@@ -10,7 +10,7 @@
 
         
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
-                {{-- Inicio --}}
+                
                 <li class="nav-item">
                     <a class="nav-link" href="{{ $slot_inicio_url ?? '#' }}">
                         {{ $slot_inicio_texto ?? 'Inicio' }}
@@ -75,7 +75,7 @@
 
             
             <div class="d-flex gap-3 align-items-center">
-                {!! $slot_acciones ?? '<a href=\"#\" class=\"text-warning fw-bold text-decoration-none\">Sé comerciante</a> <a href=\"#\" class=\"btn btn-warning rounded-pill\"><i class=\"bi bi-cart\"></i> Carrito</a>' !!}
+                {!! $slot_acciones ?? ' <a href="#" class="btn btn-success rounded-pill">Iniciar sesión</a> <a href="#" class="btn btn-warning rounded-pill"><i class="bi bi-cart"></i> Carrito</a>' !!}
             </div>
 
         </div>

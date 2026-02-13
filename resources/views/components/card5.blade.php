@@ -5,11 +5,14 @@
     'categoria' => 'Categoría',
     'distancia' => '0 km',
     'resenas' => '0',
-    'href' => '#'   // ← la vista decide el link
+    'href' => '#'   
 ])
 
 <div class="col-md-3">
-    <div class="card h-100 shadow border-0 rounded-4 position-relative">
+    <div class="card h-100 shadow border-0 rounded-4 position-relative"
+     style="transition: all .3s ease;"
+     onmouseover="this.style.transform='translateY(-10px)'; this.classList.add('shadow-lg')"
+     onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow-lg')">
 
         <img src="{{ $imagen }}"
              class="card-img-top rounded-top-4"
