@@ -98,14 +98,6 @@
             gastronomía local de forma eficiente, apoyar el crecimiento de
             los comerciantes ambulantes y contribuir a ciudades más
             cercanas, dinámicas y ambientalmente responsables.
-            Consolidarse como un referente en servicios digitales de
-            comida ambulante, integrando innovación tecnológica,
-            accesibilidad e inclusión para transformar el comercio móvil en
-            una actividad más ordenada, segura y sostenible. La Ruta Del
-            Sabor busca ser reconocida por conectar personas con la
-            gastronomía local de forma eficiente, apoyar el crecimiento de
-            los comerciantes ambulantes y contribuir a ciudades más
-            cercanas, dinámicas y ambientalmente responsables.
         </x-slot>
         <x-slot name="posicion_Imagen">derecha</x-slot>
         <x-slot name="imagen">Imagenes/imagen13.png</x-slot>
@@ -138,7 +130,7 @@
 <div class="text-center mb-5">
     <h1 class="fw-bold">¿Por qué elegirnos?</h1>
     <h2 class="text-muted">
-        Conecta con comerciantes de comida ambulante.
+        Conecta con comerciantes de comida ambulante
     </h2>
 </div>
  <div class="row g-4">
