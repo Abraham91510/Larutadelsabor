@@ -25,7 +25,7 @@
 <div id="ubicacion" style="cursor:pointer; line-height:1; display:inline-block; position:relative; padding: 5px;">
     <div onclick="toggleCuadro(event)">
         <small class="text-muted">Enviar a</small><br>
-        <strong>
+        <strong style="margin-top:10px; display:inline-block;">
             <i class="bi bi-geo-alt-fill text-danger"></i>
             <span id="ciudadTexto">Detectando...</span>
         </strong>

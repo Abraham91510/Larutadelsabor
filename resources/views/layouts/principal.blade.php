@@ -146,7 +146,7 @@
     <div class="container px-4">
         <div class="row gy-4">
             
-            
+           
             <div class="col-md-4 text-center text-md-start">
                 <div class="d-flex align-items-center mb-2 justify-content-center justify-content-md-start">
                     <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
@@ -179,110 +179,57 @@
                 </p>
             </div>
 
-            
-            <div class="col-md-4">
-                
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3 text-white">Conoce Más</h6>
-                    <ul class="list-unstyled">
-                        
-                        <li>
-                            <a href="{{ $menu['inicio']['url'] }}" class="text-white text-decoration-none link-hover">
-                                <i class="bi bi-house me-1"></i>
-                                {{ $menu['inicio']['texto'] }}
-                            </a>
-                        </li>
-
-                        
-                        <li>
-                            <a href="{{ $enlace_registro['url'] }}" class="text-white text-decoration-none link-hover">
-                                <i class="bi {{ $enlace_registro['icono'] }} me-1"></i>
-                                {{ $enlace_registro['texto'] }}
-                            </a>
-                        </li>
-
-                        
-                        <li>
-                            <a href="{{ $enlace_carrito['url'] }}" class="text-white text-decoration-none link-hover">
-                                <i class="bi {{ $enlace_carrito['icono'] }} me-1"></i>
-                                {{ $enlace_carrito['texto'] }}
-                            </a>
-                        </li>
-
-                        
-                        @isset($enlace_ayuda)
-                            <li>
-                                <a href="{{ $enlace_ayuda['url'] }}" class="text-white text-decoration-none link-hover">
-                                    <i class="bi {{ $enlace_ayuda['icono'] }} me-1"></i>
-                                    {{ $enlace_ayuda['texto'] }}
-                                </a>
-                            </li>
-                        @endisset
-
-                        
-                        <li>
-                            <a href="{{ $menu['contacto']['url'] }}" class="text-white text-decoration-none link-hover">
-                                <i class="bi {{ $menu['contacto']['icono'] }} me-1"></i>
-                                {{ $menu['contacto']['texto'] }}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                
-                <div>
-                    <h6 class="fw-bold mb-3 text-white">Categorías</h6>
-                    <ul class="list-unstyled">
-                        @foreach ($menu['categorias']['items'] as $categoria)
-                            <li>
-                                <a href="{{ $categoria['url'] }}" class="text-white text-decoration-none link-hover">
-                                    <i class="bi {{ $categoria['icono'] }} me-1"></i>
-                                    {{ $categoria['texto'] }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+         
+            <div class="col-md-2">
+                <h6 class="fw-bold mb-3 text-white">Conoce Más</h6>
+                <ul class="list-unstyled">
+                    <li><a href="{{ $menu['inicio']['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi bi-house me-1"></i>{{ $menu['inicio']['texto'] }}</a></li>
+                    <li><a href="{{ $enlace_registro['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $enlace_registro['icono'] }} me-1"></i>{{ $enlace_registro['texto'] }}</a></li>
+                    <li><a href="{{ $enlace_carrito['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $enlace_carrito['icono'] }} me-1"></i>{{ $enlace_carrito['texto'] }}</a></li>
+                    @isset($enlace_ayuda)
+                        <li><a href="{{ $enlace_ayuda['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $enlace_ayuda['icono'] }} me-1"></i>{{ $enlace_ayuda['texto'] }}</a></li>
+                    @endisset
+                    <li><a href="{{ $menu['contacto']['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $menu['contacto']['icono'] }} me-1"></i>{{ $menu['contacto']['texto'] }}</a></li>
+                </ul>
             </div>
 
-        
-            <div class="col-md-4">
-                
-                <div class="mb-4">
-                    <h6 class="fw-bold mb-3 text-white">Nuestros Comerciantes</h6>
-                    <ul class="list-unstyled">
-                        @foreach ($menu['comerciantes']['items'] as $comerciante)
-                            <li>
-                                <a href="{{ $comerciante['url'] }}" class="text-white text-decoration-none link-hover">
-                                    <i class="bi {{ $comerciante['icono'] }} me-1"></i>
-                                    {{ $comerciante['texto'] }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+       
+            <div class="col-md-2">
+                <h6 class="fw-bold mb-3 text-white">Categorías</h6>
+                <ul class="list-unstyled">
+                    @foreach ($menu['categorias']['items'] as $categoria)
+                        <li><a href="{{ $categoria['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $categoria['icono'] }} me-1"></i>{{ $categoria['texto'] }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
 
-                <div>
-                    <h6 class="fw-bold mb-3 text-white">Aprende a usar</h6>
-                    <ul class="list-unstyled">
-                        @foreach ($menu['como_funciona']['items'] as $item)
-                            <li>
-                                <a href="{{ $item['url'] }}" class="text-white text-decoration-none link-hover">
-                                    <i class="bi {{ $item['icono'] }} me-1"></i>
-                                    {{ $item['texto'] }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+          
+            <div class="col-md-2">
+                <h6 class="fw-bold mb-3 text-white">Nuestros Comerciantes</h6>
+                <ul class="list-unstyled">
+                    @foreach ($menu['comerciantes']['items'] as $comerciante)
+                        <li><a href="{{ $comerciante['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $comerciante['icono'] }} me-1"></i>{{ $comerciante['texto'] }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+
+       
+            <div class="col-md-2">
+                <h6 class="fw-bold mb-3 text-white">Aprende a usar</h6>
+                <ul class="list-unstyled">
+                    @foreach ($menu['como_funciona']['items'] as $item)
+                        <li><a href="{{ $item['url'] }}" class="text-white text-decoration-none link-hover"><i class="bi {{ $item['icono'] }} me-1"></i>{{ $item['texto'] }}</a></li>
+                    @endforeach
+                </ul>
             </div>
 
         </div>
 
-        <div class="text-center">
+    
+        <div class="text-center mt-4">
             <h6 class="fw-bold text-white">Redes Sociales</h6>
             <ul class="list-unstyled d-flex justify-content-center gap-3">
-                @foreach (['facebook', 'instagram', 'twitter', 'whatsapp', 'linkedin', 'github', 'telegram', 'youtube', 'twitch', 'discord', 'snapchat', 'pinterest', 'reddit', 'tiktok'] as $social)
+                @foreach (['facebook','instagram','twitter','whatsapp','linkedin','github','telegram','youtube','twitch','discord','snapchat','pinterest','reddit','tiktok'] as $social)
                     @isset($$social)
                         <li>
                             <a href="{{ $$social['url'] }}" target="_blank" class="text-white fs-4 social-hover">
@@ -294,11 +241,11 @@
             </ul>
         </div>
 
+      
         <div class="text-center text-white small mt-4 pb-3 border-top pt-3">
             <i class="bi bi-c-circle me-1"></i>
             {{ date('Y') }} <span style="font-family:'Lilita One', cursive;">{{ $nombre_empresa ?? 'Empresa' }}</span> . Todos los derechos reservados.
         </div>
-
     </div>
 </footer>
 

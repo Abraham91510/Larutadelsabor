@@ -40,7 +40,7 @@
 @endsection
 
 @section('subtitulo')
-    Siempre visible. Siempre a tiempo.
+    Siempre visible, Siempre a tiempo.
 @endsection
 
 @section('carrusel_pagina_principal')

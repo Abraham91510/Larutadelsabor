@@ -16,7 +16,7 @@ class HomeController extends Controller
 
     public function inicio(){
         $datos["nombre_empresa"] = "La Ruta del Sabor";
-        $datos["eslogan_empresa"] = "Siempre visible. Siempre a tiempo.";
+        $datos["eslogan_empresa"] = "Siempre visible, Siempre a tiempo.";
         $datos["logo_empresa"] = "Imagenes/La Ruta Del Sabor_Logo.ico";
         $datos["ruta_pagina_principal"] = route('inicio');
         $datos["descripcion_empresa"] = "Plataforma digital que conecta clientes 
