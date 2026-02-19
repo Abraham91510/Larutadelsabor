@@ -75,8 +75,10 @@
 
             
             <div class="d-flex gap-3 align-items-center">
-                {!! $slot_acciones ?? ' <a href="#" class="btn btn-success rounded-pill">Iniciar sesión</a> <a href="#" class="btn btn-warning rounded-pill"><i class="bi bi-cart"></i> Carrito</a>' !!}
-            </div>
+    {!! $slot_acciones ?? '
+        <a href="#" class="btn btn-success rounded-pill"><i class="bi bi-person-plus"></i> Registro</a> 
+        <a href="#" class="btn btn-warning rounded-pill"><i class="bi bi-cart"></i> Carrito</a>' !!}
+</div>
 
         </div>
     </div>

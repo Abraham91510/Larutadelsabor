@@ -10,9 +10,9 @@
         @endisset
 
         @isset($subtitulo)
-            <h4 class="mb-4" style="color: {{ $color_subtitulo }};">
+            <h3 class="mb-4" style="color: {{ $color_subtitulo }};">
                 {{ $subtitulo }}
-            </h4>
+            </h3>
         @endisset
 
             {{ $slot }}

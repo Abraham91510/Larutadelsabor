@@ -8,10 +8,12 @@
 ])
 
 <div class="col-md-4">
-    <div class="card {{ $bg }} border-0 shadow-lg rounded-5 p-4 h-100"
-    style="transition: all .3s ease;"
-    onmouseover="this.style.transform='translateY(-10px)'; this.classList.add('shadow-xl')"
-    onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow-xl')">
+    <div class="card {{ $bg }} border-0 rounded-5 p-4 h-100"
+        style="transition: all .3s ease;
+               box-shadow: 0 20px 45px rgba(0,0,0,.35);"
+        onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 30px 65px rgba(0,0,0,.50)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 20px 45px rgba(0,0,0,.35)'">
+
         <div class="{{ $color_icono }} fs-1 mb-3 text-center">
             {!! $icono !!}
         </div>

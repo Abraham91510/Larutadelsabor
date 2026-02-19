@@ -9,10 +9,12 @@
 ])
 
 <div class="col-12 mb-5">
-    <div class="row align-items-center {{ $bg }} rounded-4 shadow p-4"
-         style="transition: all .3s ease;"
-         onmouseover="this.style.transform='translateY(-10px)'; this.classList.add('shadow-lg')"
-         onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow-lg')">
+    <div class="row align-items-center {{ $bg }} rounded-4 p-4"
+         style="transition: all .3s ease;
+                box-shadow: 0 20px 45px rgba(0,0,0,.35);"
+         onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 30px 65px rgba(0,0,0,.50)'"
+         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 20px 45px rgba(0,0,0,.35)'">
+
 
      
         @if($posicion_Imagen == 'izquierda')

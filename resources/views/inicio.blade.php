@@ -17,9 +17,13 @@
             font-family: Verdana, Geneva, Tahoma, sans-serif !important;
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Aptos', sans-serif !important;
+        h1{
+        font-family: 'Lilita One', cursive !important;
         }
+        h2, h3, h4, h5, h6 {
+        font-family: 'Aptos', sans-serif !important;
+        }
+
 
         .social-hover:hover,
         .link-hover:hover {
@@ -36,7 +40,7 @@
 @endsection
 
 @section('subtitulo')
-    Página E-commerce Oficial.
+    Siempre visible. Siempre a tiempo.
 @endsection
 
 @section('carrusel_pagina_principal')
@@ -57,9 +61,9 @@
 <x-cuadro>
     <x-slot name="titulo">¿Quiénes Somos?</x-slot>
     <x-slot name="subtitulo">Nuestra identidad como empresa</x-slot>
-    <x-slot name="color_titulo">#FFD700</x-slot>
+    <x-slot name="color_titulo">#B8860B</x-slot>
     <x-slot name="color_subtitulo">#FFFFFF</x-slot>
-    <x-slot name="background">#2D9F4F</x-slot>
+    <x-slot name="background">#A9DFBF</x-slot>
 
     <div class="row g-4">
 
@@ -129,9 +133,9 @@
 @section('contenedor_porque_elegirnos')
 <div class="text-center mb-5">
     <h1 class="fw-bold">¿Por qué elegirnos?</h1>
-    <h2 class="text-muted">
+    <h3 class="text-muted">
         Conecta con comerciantes de comida ambulante
-    </h2>
+    </h3>
 </div>
  <div class="row g-4">
         <x-card3>
@@ -192,7 +196,7 @@
     </x-slot>
     <x-slot name="color_titulo">#0A0A0A</x-slot>
     <x-slot name="color_subtitulo">#FFFFFF</x-slot>
-    <x-slot name="background">#FF8C42</x-slot>
+    <x-slot name="background">#F5C29B</x-slot>
 
     <div class="row g-4">
 
@@ -227,7 +231,7 @@
 @section('contenedor_tipos_servicios')
     
     <div class="text-center mb-5">
-        <h2 class="fw-bold">Tipos de servicios</h2>
+        <h1 class="fw-bold">Tipos de servicios</h1>
         <p class="text-muted">
             Conoce las diferentes formas en que puedes contratar servicios
         </p>
@@ -286,9 +290,9 @@
         Descubre los comercios más populares cerca de ti
     </x-slot>
 
-    <x-slot name="color_titulo">#FFD700</x-slot>
+    <x-slot name="color_titulo">#B8860B</x-slot>
     <x-slot name="color_subtitulo">#FFFFFF</x-slot>
-    <x-slot name="background">#2D9F4F</x-slot>
+    <x-slot name="background">#A9DFBF</x-slot>
 
         <div class="row g-4">
 
