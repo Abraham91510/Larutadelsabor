@@ -479,7 +479,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             errorDiv.style.display = "block";
         } else {
             errorDiv.style.display = "none";
-            alert("Código postal guardado: " + cp);
         }
     }
 
