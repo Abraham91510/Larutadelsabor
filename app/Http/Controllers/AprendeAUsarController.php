@@ -3,14 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use App\Models\Pagina;
-use Illuminate\Support\Facades\App;
-use Yajra\DataTables\DataTables;
 
-
-class HomeController extends Controller
+class AprendeAUsarController extends Controller
 {
-   
     private function DatosGeneralesDeLaEmpresa()
 {
         $datos["nombre_empresa"] = "La Ruta del Sabor";
@@ -173,7 +168,7 @@ private function DatosBuscador()
 }
 
 
-    public function inicio(){
+    public function Clientes(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -183,12 +178,12 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Inicio';
+    $datos['titulopagina'] = 'Clientes';
 
-    return view('inicio', $datos);
+    return view('clientes', $datos);
     } 
 
-    public function Registro(){
+    public function Comerciantes(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -198,12 +193,12 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Registro';
+    $datos['titulopagina'] = 'Comerciantes';
 
-    return view('registro', $datos);
+    return view('comerciantes', $datos);
     } 
 
-    public function Carrito(){
+    public function Pagos(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -213,23 +208,8 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Carrito';
+    $datos['titulopagina'] = 'Pagos';
 
-    return view('carrito', $datos);
-    } 
-
-    public function Ayuda(){
-        $datos = [];
-
-    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
-    $datos['conoceMas']    = $this->DatosConoceMas();
-    $datos['categorias']   = $this->DatosCategorias();
-    $datos['comerciantes'] = $this->DatosNuestrosComerciantes();
-    $datos['aprende']      = $this->DatosAprendeAUsar();
-    $datos['redes']        = $this->DatosRedesSociales();
-    $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Ayuda';
-
-    return view('ayuda', $datos);
+    return view('pagos', $datos);
     } 
 }

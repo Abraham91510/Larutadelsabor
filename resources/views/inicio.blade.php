@@ -1,6 +1,6 @@
 @extends('layouts.principal')
-@section('titulopagina', 'La Ruta Del Sabor')
-@section('favicon', 'Imagenes/La Ruta Del Sabor_Logo.ico')
+@section('titulopagina', $titulopagina)
+@section('favicon', $generales['logo_empresa'])
 
 @push('css')
     <style>
@@ -14,14 +14,15 @@
         }
         
         body {
-            font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+            font-family: 'Nunito', sans-serif !important;
         }
 
         h1{
         font-family: 'Lilita One', cursive !important;
         }
         h2, h3, h4, h5, h6 {
-        font-family: 'Aptos', sans-serif !important;
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 700;       
         }
 
 
@@ -36,11 +37,11 @@
 @endpush
 
 @section('titulo')
-    LA RUTA DEL SABOR
+    {{ $generales['nombre_empresa'] }}
 @endsection
 
 @section('subtitulo')
-    Siempre visible, Siempre a tiempo.
+    {{ $generales['eslogan_empresa'] }}
 @endsection
 
 @section('carrusel_pagina_principal')
@@ -305,7 +306,7 @@
                 <x-slot name="categoria">Tacos</x-slot>
                 <x-slot name="distancia">0.5 km</x-slot>
                 <x-slot name="resenas">245</x-slot>
-                <x-slot name="href">{{ route('vista_inicio') }}</x-slot>
+                <x-slot name="href">{{ route('comida') }}</x-slot>
             </x-card5>
 
             <x-card5>
@@ -317,7 +318,7 @@
                 <x-slot name="categoria">Comida Yucateca</x-slot>
                 <x-slot name="distancia">1.2 km</x-slot>
                 <x-slot name="resenas">198</x-slot>
-                <x-slot name="href">{{ route('vista_inicio') }}</x-slot>
+                <x-slot name="href">{{ route('comida') }}</x-slot>
             </x-card5>
 
             <x-card5>
@@ -329,7 +330,7 @@
                 <x-slot name="categoria">Carnes</x-slot>
                 <x-slot name="distancia">0.8 km</x-slot>
                 <x-slot name="resenas">167</x-slot>
-                <x-slot name="href">{{ route('vista_inicio') }}</x-slot>
+                <x-slot name="href">{{ route('comida') }}</x-slot>
             </x-card5>
 
             <x-card5>
@@ -341,7 +342,7 @@
                 <x-slot name="categoria">Comida Centroamericana</x-slot>
                 <x-slot name="distancia">1.5 km</x-slot>
                 <x-slot name="resenas">212</x-slot>
-                <x-slot name="href">{{ route('vista_inicio') }}</x-slot>
+                <x-slot name="href">{{ route('comida') }}</x-slot>
             </x-card5>
 
         </div>

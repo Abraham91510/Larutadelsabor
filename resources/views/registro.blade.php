@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>@yield('titulopagina')</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset($__env->yieldContent('favicon')) }}">
+    <title>{{ $titulopagina }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset($generales['logo_empresa'] ?? 'Imagenes/La Ruta Del Sabor_Logo.ico') }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,15 +12,44 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+    <style>
+        .fondo{
+            background: #2D9F4F;
+        }    
+        
+        .img-responsive{
+            width: 100%;
+            height:100%;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif !important;
+        }
 
-    @stack('css')
+        h1{
+        font-family: 'Lilita One', cursive !important;
+        }
+        h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 700;       
+        }
+
+
+        .social-hover:hover,
+        .link-hover:hover {
+            color: #FFC107 !important;
+            transform: scale(1.2);
+            transition: all 0.3s ease;
+        }
+
+    </style>
 </head>
 
 <body>
 
 <div class="p-5 text-white text-center fondo">
-    <h1>@yield('titulo')</h1>
-    <h1>@yield('subtitulo')</h1>
+    <h1>{{ $generales['nombre_empresa'] }}</h1>
+    <h2>{{ $generales['eslogan_empresa'] }}</h2>
 </div>
 
 <div class="sticky-top" style="z-index: 1030;">
@@ -80,31 +109,12 @@
     </x-menu>
 </div>
 
-@yield('carrusel_pagina_principal')
-
-<div class="container-fluid px-0 py-5 text-center overflow-hidden">
-    @yield('contenedor_quienes_somos')
-</div>
-
 <div class="container-fluid px-5 py-5 text-center overflow-hidden">
-    @yield('contenedor_porque_elegirnos')
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Registro</h1>
+    </div>
 </div>
 
-<div class="container-fluid px-0 py-5 text-center overflow-hidden">
-    @yield('contenedor_beneficios')
-</div>
-
-<div class="container-fluid px-5 py-5 text-center overflow-hidden">
-    @yield('contenedor_tipos_servicios')
-</div>
-
-<div class="container-fluid px-0 py-5 text-center overflow-hidden">
-    @yield('contenedor_comerciantes_destacados')
-</div>
-
-<div class="container-fluid px-5 py-5 text-center overflow-hidden">
-    @yield('contenedor_estadistica_crecimiento_empresa')
-</div>
 
 <footer class="pt-5" style="background: #0A0A0A;">
     <div class="container px-4">
@@ -399,7 +409,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         cuadro.style.display = 'none';
     });
 </script>
-
 
 <script src="https://cdn.userway.org/widget.js" data-account="SwcLPv3GeL"></script>
 

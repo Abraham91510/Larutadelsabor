@@ -3,15 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use App\Models\Pagina;
-use Illuminate\Support\Facades\App;
-use Yajra\DataTables\DataTables;
 
-
-class HomeController extends Controller
+class CategoriaController extends Controller
 {
-   
-    private function DatosGeneralesDeLaEmpresa()
+    
+private function DatosGeneralesDeLaEmpresa()
 {
         $datos["nombre_empresa"] = "La Ruta del Sabor";
         $datos["eslogan_empresa"] = "Siempre visible, Siempre a tiempo.";
@@ -173,7 +169,7 @@ private function DatosBuscador()
 }
 
 
-    public function inicio(){
+    public function Comida(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -183,12 +179,12 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Inicio';
+    $datos['titulopagina'] = 'Comidas';
 
-    return view('inicio', $datos);
-    } 
-
-    public function Registro(){
+    return view('comida', $datos);
+    }   
+    
+    public function Snack(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -198,12 +194,12 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Registro';
+    $datos['titulopagina'] = 'Snacks';
 
-    return view('registro', $datos);
-    } 
+    return view('snack', $datos);
+    }   
 
-    public function Carrito(){
+    public function Postre(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -213,12 +209,12 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Carrito';
+    $datos['titulopagina'] = 'Postres';
 
-    return view('carrito', $datos);
+    return view('postre', $datos);
     } 
 
-    public function Ayuda(){
+    public function Panaderia(){
         $datos = [];
 
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
@@ -228,8 +224,39 @@ private function DatosBuscador()
     $datos['aprende']      = $this->DatosAprendeAUsar();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Ayuda';
+    $datos['titulopagina'] = 'Panadería';
 
-    return view('ayuda', $datos);
+    return view('panaderia', $datos);
     } 
+
+    public function Producto_Temporada(){
+        $datos = [];
+
+    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
+    $datos['conoceMas']    = $this->DatosConoceMas();
+    $datos['categorias']   = $this->DatosCategorias();
+    $datos['comerciantes'] = $this->DatosNuestrosComerciantes();
+    $datos['aprende']      = $this->DatosAprendeAUsar();
+    $datos['redes']        = $this->DatosRedesSociales();
+    $datos['buscador']     = $this->DatosBuscador();
+    $datos['titulopagina'] = 'Productos de Temporada';
+
+    return view('producto_temporada', $datos);
+    } 
+
+    public function Bebida(){
+        $datos = [];
+
+    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
+    $datos['conoceMas']    = $this->DatosConoceMas();
+    $datos['categorias']   = $this->DatosCategorias();
+    $datos['comerciantes'] = $this->DatosNuestrosComerciantes();
+    $datos['aprende']      = $this->DatosAprendeAUsar();
+    $datos['redes']        = $this->DatosRedesSociales();
+    $datos['buscador']     = $this->DatosBuscador();
+    $datos['titulopagina'] = 'Bebidas';
+
+    return view('bebida', $datos);
+    } 
+
 }
