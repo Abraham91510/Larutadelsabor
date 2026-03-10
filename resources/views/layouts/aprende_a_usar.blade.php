@@ -29,17 +29,17 @@
         <x-slot name="slot_logo">{{ $generales['logo_empresa'] }}</x-slot>
         <x-slot name="slot_ruta_inicio">{{ $conoceMas['enlace_inicio']['url'] }}</x-slot>
 
-        <x-slot name="slot_opciones_buscador">
-            @foreach($buscador['DatosBuscador'] as $categoria => $opciones)
-                <optgroup label="{{ $categoria }}">
-                    @foreach($opciones as $opcion)
-                        <option value="{{ $opcion['texto'] }}" data-icon="{{ $opcion['icono'] }}">
-                            {{ $opcion['texto'] }}
-                        </option>
-                    @endforeach
-                </optgroup>
+         <x-slot name="slot_opciones_buscador">
+    @foreach($buscador['DatosBuscador'] ?? [] as $categoria => $opciones)
+        <optgroup label="{{ $categoria }}">
+            @foreach($opciones as $opcion)
+                <option value="{{ $opcion['texto'] }}" data-icon="{{ $opcion['icono'] }}" data-url="{{ $opcion['url'] }}">
+                    {{ $opcion['texto'] }}
+                </option>
             @endforeach
-        </x-slot>
+        </optgroup>
+    @endforeach
+</x-slot>
     </x-navbar>
 
     <x-menu>
@@ -202,52 +202,53 @@
     
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script>
-    $(document).ready(function() {
-
-        function formatOption(option) {
-
-            if (!option.id) {
-                return option.text;
-            }
-
-            if (option.children) {
-
-                let icon = $(option.element).data('icon');
-
-                return $(
-                    '<span style="font-weight:bold; font-size:14px;">' +
-                    '<i class="bi ' + icon + ' me-2"></i>' +
-                    option.text +
-                    '</span>'
-                );
-            }
-
-            let icon = $(option.element).data('icon');
-
-            if (icon) {
-                return $(
-                    '<span style="padding-left:15px;">' +
-                    '<i class="bi ' + icon + ' me-2 text-primary"></i>' +
-                    option.text +
-                    '</span>'
-                );
-            }
-
-            return option.text;
+    
+   <!-- Select2 Buscador -->
+<script>
+$(document).ready(function() {
+    function formatOption(option) {
+        if (!option.id) return option.text;
+        let icon = $(option.element).data('icon');
+        if (option.children) {
+            return $('<span style="font-weight:bold; font-size:14px;"><i class="bi ' + icon + ' me-2"></i>' + option.text + '</span>');
         }
+        if (icon) {
+            return $('<span style="padding-left:15px;"><i class="bi ' + icon + ' me-2 text-primary"></i>' + option.text + '</span>');
+        }
+        return option.text;
+    }
 
-        $("#buscador").select2({
-            placeholder: "Buscar productos...",
-            allowClear: true,
-            width: '100%',
-            minimumInputLength: 1,
-            templateResult: formatOption,
-            templateSelection: formatOption
-        });
-
+    $("#buscador").select2({
+        placeholder: "Buscar productos...",
+        allowClear: true,
+        width: '100%',
+        minimumInputLength: 1,
+        language: {
+            inputTooShort: function() {
+                return "Escribe al menos un carácter";
+            },
+            noResults: function() {
+                return "No se encontraron resultados";
+            },
+            searching: function() {
+                return "Buscando...";
+            }
+        },
+        templateResult: formatOption,
+        templateSelection: formatOption
     });
-    </script>
+
+    // Redirigir al seleccionar
+    $("#buscador").on('select2:select', function(e){
+        const url = $(e.params.data.element).data('url');
+        if(url){
+            window.location.href = url;
+        }
+    });
+});
+</script>
+
+
 
 
 <script>

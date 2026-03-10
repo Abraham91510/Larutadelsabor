@@ -135,37 +135,24 @@ private function DatosRedesSociales()
         return $datos;
 }
 
-private function DatosBuscador()
+ private function DatosBuscador()
 {
-    $datos["DatosBuscador"] = [
-    'Comidas' => [
-        ['texto' => 'Tacos al Pastor', 'icono' => 'bi-fire'],
-        ['texto' => 'Cochinita Pibil', 'icono' => 'bi-egg'],
-        ['texto' => 'Carnitas Artesanales', 'icono' => 'bi-fork-knife'],
-        ['texto' => 'Pupusas Típicas', 'icono' => 'bi-circle'],
-    ],
-    'Snack’s' => [
-        ['texto' => 'Nachos con queso', 'icono' => 'bi-triangle'],
-        ['texto' => 'Papas fritas', 'icono' => 'bi-emoji-smile'],
-    ],
-    'Postres' => [
-        ['texto' => 'Pastel de tres leches', 'icono' => 'bi-cake'],
-        ['texto' => 'Flan napolitano', 'icono' => 'bi-cup-hot'],
-    ],
-    'Panaderia' => [
-        ['texto' => 'Pan dulce', 'icono' => 'bi-circle-fill'],
-        ['texto' => 'Conchas tradicionales', 'icono' => 'bi-circle'],
-    ],
-    'Productos de Temporada' => [
-        ['texto' => 'Rosca de Reyes', 'icono' => 'bi-star'],
-        ['texto' => 'Pan de muerto', 'icono' => 'bi-flower1'],
-    ],
-    'Bebidas' => [
-        ['texto' => 'Agua de horchata', 'icono' => 'bi-droplet'],
-        ['texto' => 'Café de olla', 'icono' => 'bi-cup-hot-fill'],
-    ],
-];
-        return $datos;
+    // Trae productos con categoría, subcategoría y slug para URL
+    $productos = \App\Models\Producto::with(['categoria', 'subcategoria'])
+        ->get(['id', 'nombre', 'slug', 'categoria_id', 'subcategoria_id']);
+
+    $datos = [];
+
+    foreach ($productos as $prod) {
+        $categoria = $prod->categoria->nombre ?? 'Otros';
+        $datos[$categoria][] = [
+            'texto' => $prod->nombre,
+            'icono' => 'bi-box', // puedes poner un icono genérico o según categoría
+            'url' => route('producto', $prod->slug) // ruta a la página del producto
+        ];
+    }
+
+    return ['DatosBuscador' => $datos];
 }
 
 

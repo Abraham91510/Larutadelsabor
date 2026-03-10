@@ -87,6 +87,10 @@
             </select>
         </div>
 
+         <!-- Slot para contenido extra (botón filtro, otros botones, etc) -->
+        <div class="d-flex align-items-center gap-2">
+    {{ $slot }}
+</div>
     </div>
 </nav>
 
