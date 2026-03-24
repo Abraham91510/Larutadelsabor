@@ -9,10 +9,10 @@ class ProductoImagen extends Model
     protected $table = "producto_imagen";
 
     protected $fillable = [
-        'producto_id', 'imagen'
+        'producto_id',
+        'imagen'
     ];
 
-    // Relación inversa: cada imagen pertenece a un producto
     public function producto()
     {
         return $this->belongsTo(Producto::class, 'producto_id');

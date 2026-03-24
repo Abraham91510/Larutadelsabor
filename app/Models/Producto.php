@@ -9,15 +9,11 @@ class Producto extends Model
     protected $table = "productos";
 
     protected $fillable = [
-        'nombre', 'slug', 'descripcion', 'precio', 'rating',
-        'imagen', 'icono','categoria_id', 'subcategoria_id'
+        'nombre', 'slug', 'descripcion', 'precio', 'rating', 
+        'icono', 'subcategoria_id'
     ];
 
     // Relaciones
-    public function categoria()
-    {
-        return $this->belongsTo(Categoria::class, 'categoria_id');
-    }
 
     public function subcategoria()
     {
@@ -42,10 +38,14 @@ class Producto extends Model
      */
     public function ObtenerProductosFiltrados($categoria_slug = null, $subcategoria = null, $precio_min = null, $precio_max = null, $rating = null, $cp = null)
     {
-        $query = self::with(['categoria', 'subcategoria', 'colonias', 'imagenes']); // incluye imágenes
+         $query = self::with([
+            'subcategoria.categoria',
+            'colonias',
+            'imagenes'
+        ]);
 
         if ($categoria_slug) {
-            $query->whereHas('categoria', function ($q) use ($categoria_slug) {
+            $query->whereHas('subcategoria.categoria', function ($q) use ($categoria_slug) {
                 $q->where('slug', $categoria_slug);
             });
         }

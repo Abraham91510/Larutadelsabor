@@ -20,6 +20,13 @@ class Categoria extends Model
 
     public function productos()
     {
-        return $this->hasMany(Producto::class);
+        return $this->hasManyThrough(
+            Producto::class,
+            Subcategoria::class,
+            'categoria_id',
+            'subcategoria_id',
+            'id',
+            'id'
+        );
     }
 }

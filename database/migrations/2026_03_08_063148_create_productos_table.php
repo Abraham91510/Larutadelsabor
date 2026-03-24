@@ -16,29 +16,22 @@ return new class extends Migration
             $table->string('nombre');
 
             // Slug para URL, ejemplo: bebidastormsinalcohol
-            $table->string('slug');
+            $table->string('slug')->unique();
 
             $table->text('descripcion');
             $table->decimal('precio', 8, 2);
             $table->float('rating')->default(4);
-            $table->string('imagen');
 
             $table->string('icono')->default('bi-box');
 
-
-            $table->unsignedBigInteger('categoria_id');
             $table->unsignedBigInteger('subcategoria_id');
 
             $table->timestamps();
 
-            // Relaciones con otras tablas
-            $table->foreign('categoria_id')
-                ->references('id')
-                ->on('categorias');
-
             $table->foreign('subcategoria_id')
                 ->references('id')
-                ->on('subcategorias');
+                ->on('subcategorias')
+                ->onDelete('cascade');;
         });
     }
 
