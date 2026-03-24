@@ -23,6 +23,9 @@ return new class extends Migration
             $table->float('rating')->default(4);
             $table->string('imagen');
 
+            $table->string('icono')->default('bi-box');
+
+
             $table->unsignedBigInteger('categoria_id');
             $table->unsignedBigInteger('subcategoria_id');
 

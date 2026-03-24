@@ -20,14 +20,6 @@ Route::get('/carrito', [HomeController::class,'Carrito'])->name('carrito');
 Route::get('/ayuda', [HomeController::class,'Ayuda'])->name('ayuda');
 Route::get('/contacto', [PostController::class, 'Contacto'])->name('contacto');
 
-// Rutas de Categorías
-Route::get('/comida', [CategoriaController::class, 'Comida'])->name('comida');
-Route::get('/snack', [CategoriaController::class, 'Snack'])->name('snack');
-Route::get('/postre', [CategoriaController::class, 'Postre'])->name('postre');
-Route::get('/panaderia', [CategoriaController::class, 'Panaderia'])->name('panaderia');
-Route::get('/producto_temporada', [CategoriaController::class, 'Producto_Temporada'])->name('producto_temporada');
-Route::get('/bebida', [CategoriaController::class, 'Bebida'])->name('bebida');
-
 // Rutas de Nuestros Comerciantes
 Route::get('/cerca_mi', [NuestrosComerciantesController::class, 'Cerca_Mi'])->name('cerca_mi');
 Route::get('/mejor_calificados', [NuestrosComerciantesController::class, 'Mejor_Calificados'])->name('mejor_calificados');
@@ -42,6 +34,11 @@ Route::get('/pagos', [AprendeAUsarController::class, 'Pagos'])->name('pagos');
 Route::get('/producto/{slug}', function($slug) {
     return "Producto: " . $slug;
 })->name('producto');
+
+Route::get('/productos/{categoria?}', [CategoriaController::class, 'Productos'])->name('productos');
+
+Route::get('/subcategorias/{categoria}', [CategoriaController::class, 'SubcategoriasAjax']);
+
 
 /* 
 Rutas comentadas de ejemplo

@@ -306,7 +306,7 @@
                 <x-slot name="categoria">Tacos</x-slot>
                 <x-slot name="distancia">0.5 km</x-slot>
                 <x-slot name="resenas">245</x-slot>
-                <x-slot name="href">{{ route('comida') }}</x-slot>
+                <x-slot name="href">{{ route('productos') }}</x-slot>
             </x-card5>
 
             <x-card5>
@@ -318,7 +318,7 @@
                 <x-slot name="categoria">Comida Yucateca</x-slot>
                 <x-slot name="distancia">1.2 km</x-slot>
                 <x-slot name="resenas">198</x-slot>
-                <x-slot name="href">{{ route('comida') }}</x-slot>
+                <x-slot name="href">{{ route('productos') }}</x-slot>
             </x-card5>
 
             <x-card5>
@@ -330,7 +330,7 @@
                 <x-slot name="categoria">Carnes</x-slot>
                 <x-slot name="distancia">0.8 km</x-slot>
                 <x-slot name="resenas">167</x-slot>
-                <x-slot name="href">{{ route('comida') }}</x-slot>
+                <x-slot name="href">{{ route('productos') }}</x-slot>
             </x-card5>
 
             <x-card5>
@@ -342,7 +342,7 @@
                 <x-slot name="categoria">Comida Centroamericana</x-slot>
                 <x-slot name="distancia">1.5 km</x-slot>
                 <x-slot name="resenas">212</x-slot>
-                <x-slot name="href">{{ route('comida') }}</x-slot>
+                <x-slot name="href">{{ route('productos') }}</x-slot>
             </x-card5>
 
         </div>

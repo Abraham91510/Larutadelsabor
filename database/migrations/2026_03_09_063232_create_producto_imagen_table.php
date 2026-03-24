@@ -9,31 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-
     public function up(): void
     {
-        Schema::create('categorias', function (Blueprint $table) {
-
+        Schema::create('producto_imagen', function (Blueprint $table) {
             $table->id();
-
-            $table->string('nombre');
-
-            //Para URL ejemplo: bebida
-            $table->string('slug')->unique();
-
-            $table->string('icono')->default('bi-folder');
-
+            $table->unsignedBigInteger('producto_id');
+            $table->string('imagen'); // ruta de la imagen
             $table->timestamps();
 
+            $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');
         });
     }
 
     /**
      * Reverse the migrations.
      */
-
     public function down(): void
     {
-        Schema::dropIfExists('categorias');
+        Schema::dropIfExists('producto_imagen');
     }
 };

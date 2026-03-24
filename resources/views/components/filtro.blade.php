@@ -1,51 +1,92 @@
-@props(['subcategorias'])
+@props(['subcategorias','categoria_selected','precio_min','precio_max'])
 
-<div class="position-relative">
+<form method="GET">
 
-    <!-- Botón Filtros -->
-    <button id="btnFiltros" class="btn btn-outline-dark rounded-pill" type="button">
-        <i class="bi bi-sliders me-1"></i> Filtros
+    <!-- CATEGORÍA -->
+    <label class="fw-bold">Categoría</label>
+    <select id="categoria" name="categoria" class="form-control mb-3">
+        <option value="">Todas</option>
+        <option value="comida" {{ request('categoria') == 'comida' ? 'selected' : '' }}>Comida</option>
+        <option value="snack" {{ request('categoria') == 'snack' ? 'selected' : '' }}>Snack's</option>
+        <option value="postres" {{ request('categoria') == 'postres' ? 'selected' : '' }}>Postres</option>
+        <option value="panaderia" {{ request('categoria') == 'panaderia' ? 'selected' : '' }}>Panadería</option>
+        <option value="bebidas" {{ request('categoria') == 'bebidas' ? 'selected' : '' }}>Bebidas</option>
+        <option value="producto_temporada" {{ request('categoria') == 'producto_temporada' ? 'selected' : '' }}>
+    Productos de temporada
+</option>
+    </select>
+
+    <!-- SUBCATEGORÍA -->
+    <label class="fw-bold">Subcategoría</label>
+    <select id="subcategoria" name="subcategoria" class="form-control mb-3">
+        <option value="">Todas</option>
+
+        @foreach($subcategorias as $sub)
+            <option value="{{ $sub->id }}" {{ request('subcategoria') == $sub->id ? 'selected' : '' }}>
+                {{ $sub->nombre }}
+            </option>
+        @endforeach
+    </select>
+
+    <!-- PRECIO (USA TU JS) -->
+    <label class="fw-bold">Precio máximo</label>
+    <input 
+        type="range"
+        id="precioRange"
+        name="precio_max"
+        min="{{ $precio_min }}"
+        max="{{ $precio_max }}"
+        step="0.01"
+        value="{{ request('precio_max', $precio_max) }}"
+        class="form-range"
+    >
+
+    <p class="text-center">
+        Hasta: <strong id="precioValor"></strong>
+    </p>
+
+<!-- ⭐ CALIFICACIÓN COMBO CON ICONOS BI -->
+<label class="fw-bold">Calificación</label>
+
+<input type="hidden" name="rating" id="ratingInput" value="{{ request('rating') }}">
+
+<div class="dropdown mb-3">
+    <button class="btn btn-outline-secondary w-100 text-start dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        
+        <span id="ratingTexto" data-default="Seleccionar calificación">
+            @if(request('rating'))
+                @for($j = 1; $j <= 5; $j++)
+                    <i class="bi {{ $j <= request('rating') ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}"></i>
+                @endfor
+            @else
+                Seleccionar calificación
+            @endif
+        </span>
+
     </button>
 
-    <!-- Panel flotante -->
-    <div id="panelFiltros" class="bg-white border rounded shadow-sm p-3"
-         style="display:none; position:absolute; top:110%; right:0; width:320px; z-index:1050;">
-        <form method="GET">
+    <ul class="dropdown-menu w-100">
 
-            <!-- Subcategoría -->
-            <label class="fw-bold">Subcategoría</label>
-            <select name="subcategoria" class="form-control select2 mb-3">
-                <option value="">Todas</option>
-                @foreach($subcategorias ?? [] as $sub)
-                    <option value="{{ $sub->id }}" @if(request('subcategoria') == $sub->id) selected @endif>
-                        {{ $sub->nombre }}
-                    </option>
-                @endforeach
-            </select>
+        <li>
+            <a class="dropdown-item rating-opcion" data-value="">
+                Todas
+            </a>
+        </li>
 
-            <!-- Precio mínimo -->
-            <label class="fw-bold">Precio mínimo</label>
-            <input type="number" name="precio_min" value="{{ request('precio_min') }}" class="form-control mb-3">
+        @for($i = 5; $i >= 1; $i--)
+            <li>
+                <a class="dropdown-item rating-opcion" data-value="{{ $i }}">
+                    @for($j = 1; $j <= 5; $j++)
+                        <i class="bi {{ $j <= $i ? 'bi-star-fill text-warning' : 'bi-star text-muted' }}"></i>
+                    @endfor
+                </a>
+            </li>
+        @endfor
 
-            <!-- Precio máximo -->
-            <label class="fw-bold">Precio máximo</label>
-            <input type="number" name="precio_max" value="{{ request('precio_max') }}" class="form-control mb-3">
-
-            <!-- Rating con estrellas -->
-            <label class="fw-bold">Rating</label>
-            <select name="rating" class="form-control mb-3">
-                <option value="">Todos</option>
-                @for($i=1; $i<=5; $i++)
-                    <option value="{{ $i }}" @if(request('rating') == $i) selected @endif>
-                        {{ str_repeat('★', $i) }}{{ str_repeat('☆', 5-$i) }}
-                    </option>
-                @endfor
-            </select>
-
-            <button type="submit" class="btn btn-primary w-100 mt-2">
-                Aplicar filtros
-            </button>
-        </form>
-    </div>
-
+    </ul>
 </div>
+
+    <!-- BOTÓN -->
+    <button class="btn btn-primary w-100">Aplicar filtros</button>
+
+</form>

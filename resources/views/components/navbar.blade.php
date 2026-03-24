@@ -91,6 +91,13 @@
         <div class="d-flex align-items-center gap-2">
     {{ $slot }}
 </div>
+
+<!-- Botón Avanzada -->
+<!-- NUEVO BOTÓN AVANZADA -->
+<a href="{{ route('productos') }}" class="btn btn-primary rounded-pill">
+    <i class="bi bi-funnel me-1"></i> Avanzada
+</a>
+
     </div>
 </nav>
 

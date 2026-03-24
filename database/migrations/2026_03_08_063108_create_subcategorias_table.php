@@ -21,6 +21,8 @@ return new class extends Migration
             //ejemplo: sinalcohol
             $table->string('slug');
 
+            $table->string('icono')->default('bi-tag');
+
             $table->unsignedBigInteger('categoria_id');
 
             $table->timestamps();

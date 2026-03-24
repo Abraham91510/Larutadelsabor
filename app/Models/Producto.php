@@ -10,7 +10,7 @@ class Producto extends Model
 
     protected $fillable = [
         'nombre', 'slug', 'descripcion', 'precio', 'rating',
-        'imagen', 'categoria_id', 'subcategoria_id', 'vendedor_id', 'promocionado'
+        'imagen', 'icono','categoria_id', 'subcategoria_id'
     ];
 
     // Relaciones
@@ -30,11 +30,19 @@ class Producto extends Model
     }
 
     /**
+     * Nueva relación: un producto puede tener muchas imágenes
+     */
+    public function imagenes()
+    {
+        return $this->hasMany(ProductoImagen::class, 'producto_id');
+    }
+
+    /**
      * Obtener productos filtrados (Eloquent)
      */
     public function ObtenerProductosFiltrados($categoria_slug = null, $subcategoria = null, $precio_min = null, $precio_max = null, $rating = null, $cp = null)
     {
-        $query = self::with(['categoria', 'subcategoria', 'colonias']);
+        $query = self::with(['categoria', 'subcategoria', 'colonias', 'imagenes']); // incluye imágenes
 
         if ($categoria_slug) {
             $query->whereHas('categoria', function ($q) use ($categoria_slug) {
@@ -64,6 +72,6 @@ class Producto extends Model
             });
         }
 
-        return $query->paginate(20);
+        return $query;
     }
 }

@@ -8,20 +8,21 @@ use App\Models\Subcategoria;
 
 class CategoriaController extends Controller
 {
-    private function DatosGeneralesDeLaEmpresa()
-    {
-        return [
-            "nombre_empresa" => "La Ruta del Sabor",
-            "eslogan_empresa" => "Siempre visible, Siempre a tiempo.",
-            "logo_empresa" => "Imagenes/La Ruta Del Sabor_Logo.ico",
-            "descripcion_empresa" => "Plataforma digital que conecta clientes con comerciantes ambulantes de comida mediante geolocalización y tecnología segura.",
-            'derechos_reservados_empresa' => [
+       private function DatosGeneralesDeLaEmpresa()
+{
+        $datos["nombre_empresa"] = "La Ruta del Sabor";
+        $datos["eslogan_empresa"] = "Siempre visible, Siempre a tiempo.";
+        $datos["logo_empresa"] = "Imagenes/La Ruta Del Sabor_Logo.ico";
+        $datos["descripcion_empresa"] = "Plataforma digital que conecta clientes 
+        con comerciantes ambulantes de comida mediante geolocalización y tecnología segura.";
+        $datos['derechos_reservados_empresa'] = [
                 'icono' => 'bi bi-c-circle',
                 'anio' => date('Y'),
                 'texto' => 'Todos los derechos reservados.'
-            ]
-        ];
-    }
+];
+
+        return $datos;
+}
 
     private function DatosConoceMas()
     {
@@ -38,137 +39,189 @@ class CategoriaController extends Controller
         return [
             'titulo'=>'Categorías',
             'items'=>[
-                ['texto'=>'Comidas','url'=>route('comida'),'icono'=>'bi-basket'],
-                ['texto'=>'Snack’s','url'=>route('snack'),'icono'=>'bi-egg-fried'],
-                ['texto'=>'Postres','url'=>route('postre'),'icono'=>'bi-cup-straw'],
-                ['texto'=>'Panadería','url'=>route('panaderia'),'icono'=>'bi-bag'],
-                ['texto'=>'Productos de temporada','url'=>route('producto_temporada'),'icono'=>'bi-calendar-check'],
-                ['texto'=>'Bebidas','url'=>route('bebida'),'icono'=>'bi-cup']
+                ['texto'=>'Comidas','url'=>route('productos', ['categoria'=>'comida']),'icono'=>'bi-basket'],
+                ['texto'=>'Snack’s','url'=>route('productos', ['categoria'=>'snack']),'icono'=>'bi-egg-fried'],
+                ['texto'=>'Postres','url'=>route('productos', ['categoria'=>'postres']),'icono'=>'bi-cup-straw'],
+                ['texto'=>'Panadería','url'=>route('productos', ['categoria'=>'panaderia']),'icono'=>'bi-bag'],
+                ['texto'=>'Bebidas','url'=>route('productos', ['categoria'=>'bebidas']),'icono'=>'bi-cup'],
+                ['texto'=>'Productos de temporada','url'=>route('productos', ['categoria'=>'producto_temporada']),'icono'=>'bi-calendar-check']
             ]
+        ];
+    }
+
+    private function DatosNuestrosComerciantes()
+{
+        $datos = [
+                'titulo' => 'Nuestros Comerciantes',
+                'items' => [
+                    ['texto' => 'Cerca de mí', 'url' => route('cerca_mi'), 'icono' => 'bi-geo-alt'],
+                    ['texto' => 'Mejor calificados', 'url' => route('mejor_calificados'), 'icono' => 'bi-star'],
+                    ['texto' => 'Nuevos', 'url' => route('nuevos_comerciantes'), 'icono' => 'bi-plus-circle'],
+                ]
+        ];
+return $datos;
+}
+
+private function DatosAprendeAUsar()
+{
+        $datos = [
+                'titulo' => 'Aprende a usar',
+                'items' => [
+                    ['texto' => 'Clientes', 'url' => route('clientes'), 'icono' => 'bi-person-lines-fill'],
+                    ['texto' => 'Comerciantes', 'url' => route('comerciantes'), 'icono' => 'bi-shop'],
+                    ['texto' => 'Pagos', 'url' => route('pagos'), 'icono' => 'bi-credit-card'],
+                ]
+        ];   
+return $datos;     
+}
+
+private function DatosRedesSociales()
+{
+
+        $datos["facebook"] = [
+            "icono" => "fa-facebook",
+            "url" => "https://www.facebook.com/?locale=es_LA"
+        ];
+
+        $datos["instagram"] = [
+            "icono" => "fa-instagram",
+            "url" => "https://www.instagram.com/"
+        ];
+
+        $datos["x"] = [
+            "icono" => "fa-x-twitter",
+            "url" => "https://x.com/?lang=es"
+        ];
+
+        $datos["whatsapp"] = [
+            "icono" => "fa-whatsapp",
+            "url" => "https://www.whatsapp.com/?lang=es"
+        ];
+
+        $datos["youtube"] = [
+            "icono" => "fa-youtube",
+            "url" => "https://www.youtube.com/"
+        ];
+
+        $datos["tiktok"] = [
+            "icono" => "fa-tiktok",
+            "url" => "https://www.tiktok.com/"
+        ];
+
+        return $datos;
+}
+
+    private function cargarDatosBase(&$datos)
+    {
+        $datos['conoceMas'] = $this->DatosConoceMas();
+        $datos['categorias'] = $this->DatosCategorias();
+        $datos['generales'] = $this->DatosGeneralesDeLaEmpresa();
+    }
+
+    private function cargarProductos(Request $request)
+    {
+        $categoria_slug = $request->categoria ?? null;
+
+        // Subcategorías según la categoría seleccionada
+        $subcategoriaModel = new Subcategoria();
+        $subcategorias = $categoria_slug
+            ? $subcategoriaModel->ObtenerPorCategoria($categoria_slug)
+            : collect(); // vacío si no hay categoría
+
+        // Productos filtrados
+        $productoModel = new Producto();
+        $productos = $productoModel->ObtenerProductosFiltrados(
+            $categoria_slug,
+            $request->subcategoria,
+            $request->precio_min,
+            $request->precio_max,
+            $request->rating,
+            $request->cp
+        )->paginate(12);
+
+        // Precios min y max reales
+        $precio_min = Producto::min('precio');
+        $precio_max = Producto::max('precio');
+
+        return [
+            "subcategorias" => $subcategorias,
+            "productos" => $productos,
+            "precio_min" => $precio_min,
+            "precio_max" => $precio_max,
+            "categoria_selected" => $categoria_slug
         ];
     }
 
    private function DatosBuscador()
 {
-    // Trae productos con categoría, subcategoría y slug para URL
-    $productos = \App\Models\Producto::with(['categoria', 'subcategoria'])
-        ->get(['id', 'nombre', 'slug', 'categoria_id', 'subcategoria_id']);
+    $productos = \App\Models\Producto::with(['categoria','subcategoria'])->get();
 
     $datos = [];
 
     foreach ($productos as $prod) {
+
         $categoria = $prod->categoria->nombre ?? 'Otros';
-        $datos[$categoria][] = [
-            'texto' => $prod->nombre,
-            'icono' => 'bi-box', // puedes poner un icono genérico o según categoría
-            'url' => route('producto', $prod->slug) // ruta a la página del producto
-        ];
+
+        if(!isset($datos[$categoria])){
+            $datos[$categoria] = [];
+        }
+
+        if(count($datos[$categoria]) < 5){
+
+            $datos[$categoria][] = [
+
+                'texto' => ($prod->subcategoria->nombre ?? '') . ' > ' . $prod->nombre,
+
+                'icono' => $prod->icono, // icono desde BD
+
+                'url' => route('producto',$prod->slug)
+
+            ];
+
+        }
+
     }
 
-    return ['DatosBuscador' => $datos];
+    return ['DatosBuscador'=>$datos];
 }
 
-    private function cargarDatosBase(&$datos)
-    {
-        $datos['generales'] = $this->DatosGeneralesDeLaEmpresa();
-        $datos['conoceMas'] = $this->DatosConoceMas();
-        $datos['categorias'] = $this->DatosCategorias();
-        $datos['buscador'] = $this->DatosBuscador();
-    }
-
-    private function cargarProductos($categoria_slug, Request $request)
-{
-    $subcategoriaModel = new Subcategoria();
-    $subcategorias = $subcategoriaModel->ObtenerPorCategoria($categoria_slug);
-
-    $productoModel = new Producto();
-    $productos = $productoModel->ObtenerProductosFiltrados(
-        $categoria_slug,
-        $request->subcategoria,
-        $request->precio_min,
-        $request->precio_max,
-        $request->rating,
-        $request->cp
-    );
-
-    return ["subcategorias" => $subcategorias, "productos" => $productos];
-}
-    public function Comida(Request $request)
-    {
-        $datos = [];
-        $this->cargarDatosBase($datos);
-
-        $filtro = $this->cargarProductos("comida", $request);
-        $datos["subcategorias"] = $filtro["subcategorias"];
-        $datos["productos"] = $filtro["productos"];
-        $datos["titulopagina"] = "Comidas";
-
-        return view("comida", $datos);
-    }
-
-    public function Snack(Request $request)
-    {
-        $datos = [];
-        $this->cargarDatosBase($datos);
-
-        $filtro = $this->cargarProductos("snack", $request);
-        $datos["subcategorias"] = $filtro["subcategorias"];
-        $datos["productos"] = $filtro["productos"];
-        $datos["titulopagina"] = "Snack’s";
-
-        return view("snack", $datos);
-    }
-
-    public function Postre(Request $request)
-    {
-        $datos = [];
-        $this->cargarDatosBase($datos);
-
-        $filtro = $this->cargarProductos("postres", $request);
-        $datos["subcategorias"] = $filtro["subcategorias"];
-        $datos["productos"] = $filtro["productos"];
-        $datos["titulopagina"] = "Postres";
-
-        return view("postre", $datos);
-    }
-
-    public function Panaderia(Request $request)
-    {
-        $datos = [];
-        $this->cargarDatosBase($datos);
-
-        $filtro = $this->cargarProductos("panaderia", $request);
-        $datos["subcategorias"] = $filtro["subcategorias"];
-        $datos["productos"] = $filtro["productos"];
-        $datos["titulopagina"] = "Panadería";
-
-        return view("panaderia", $datos);
-    }
-
-    public function Producto_Temporada(Request $request)
-    {
-        $datos = [];
-        $this->cargarDatosBase($datos);
-
-        $filtro = $this->cargarProductos("producto_temporada", $request);
-        $datos["subcategorias"] = $filtro["subcategorias"];
-        $datos["productos"] = $filtro["productos"];
-        $datos["titulopagina"] = "Productos de temporada";
-
-        return view("producto_temporada", $datos);
-    }
-
-    public function Bebida(Request $request)
+public function Productos(Request $request)
 {
     $datos = [];
     $this->cargarDatosBase($datos);
 
-    // Aquí va el slug correcto de la categoría
-    $filtro = $this->cargarProductos("bebidas", $request); 
+    $filtro = $this->cargarProductos($request);
+
     $datos["subcategorias"] = $filtro["subcategorias"];
     $datos["productos"] = $filtro["productos"];
-    $datos["titulopagina"] = "Bebidas";
+    $datos["precio_min"] = $filtro["precio_min"];
+    $datos["precio_max"] = $filtro["precio_max"];
+    $datos["categoria_selected"] = $filtro["categoria_selected"];
+    $datos["titulopagina"] = $filtro["categoria_selected"]
+        ? ucfirst($filtro["categoria_selected"])
+        : "Todos los productos";
 
-    return view("bebida", $datos);
+    $datos["buscador"] = $this->DatosBuscador();
+    
+
+    // Agregar los datos faltantes para menú y footer
+    $datos['comerciantes'] = $this->DatosNuestrosComerciantes();
+    $datos['aprende']      = $this->DatosAprendeAUsar();
+    $datos['redes']        = $this->DatosRedesSociales();
+    
+
+    return view("productos", $datos);
 }
+
+public function SubcategoriasAjax($categoria_slug)
+{
+    $subcategorias = \App\Models\Subcategoria::whereHas('categoria', function($q) use ($categoria_slug){
+        $q->where('slug', $categoria_slug);
+    })->select('id','nombre')->get();
+
+    return response()->json($subcategorias);
+}
+
+
+
 }

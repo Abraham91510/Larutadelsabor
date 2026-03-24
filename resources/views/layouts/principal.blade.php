@@ -13,6 +13,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
 
+    
+
     @stack('css')
 </head>
 
@@ -28,16 +30,29 @@
         <x-slot name="slot_logo">{{ $generales['logo_empresa'] }}</x-slot>
         <x-slot name="slot_ruta_inicio">{{ $conoceMas['enlace_inicio']['url'] }}</x-slot>
 
-         <x-slot name="slot_opciones_buscador">
-    @foreach($buscador['DatosBuscador'] ?? [] as $categoria => $opciones)
-        <optgroup label="{{ $categoria }}">
-            @foreach($opciones as $opcion)
-                <option value="{{ $opcion['texto'] }}" data-icon="{{ $opcion['icono'] }}" data-url="{{ $opcion['url'] }}">
-                    {{ $opcion['texto'] }}
-                </option>
-            @endforeach
-        </optgroup>
+       <x-slot name="slot_opciones_buscador">
+
+@foreach($buscador['DatosBuscador'] ?? [] as $categoria => $opciones)
+
+<optgroup label="{{ $categoria }}">
+
+    @foreach($opciones as $opcion)
+
+        <option
+            value="{{ $opcion['texto'] }}"
+            data-icon="{{ $opcion['icono'] }}"
+            data-url="{{ $opcion['url'] }}">
+
+            {{ $opcion['texto'] }}
+
+        </option>
+
     @endforeach
+
+</optgroup>
+
+@endforeach
+
 </x-slot>
 
     </x-navbar>
@@ -223,49 +238,93 @@
     
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-       <!-- Select2 Buscador -->
-<script>
+    <script>
+
 $(document).ready(function() {
-    function formatOption(option) {
-        if (!option.id) return option.text;
-        let icon = $(option.element).data('icon');
-        if (option.children) {
-            return $('<span style="font-weight:bold; font-size:14px;"><i class="bi ' + icon + ' me-2"></i>' + option.text + '</span>');
-        }
-        if (icon) {
-            return $('<span style="padding-left:15px;"><i class="bi ' + icon + ' me-2 text-primary"></i>' + option.text + '</span>');
-        }
+
+function formatOption(option) {
+
+    if (!option.id) {
         return option.text;
     }
 
-    $("#buscador").select2({
-        placeholder: "Buscar productos...",
-        allowClear: true,
-        width: '100%',
-        minimumInputLength: 1,
-        language: {
-            inputTooShort: function() {
-                return "Escribe al menos un carácter";
-            },
-            noResults: function() {
-                return "No se encontraron resultados";
-            },
-            searching: function() {
-                return "Buscando...";
-            }
-        },
-        templateResult: formatOption,
-        templateSelection: formatOption
-    });
+    let icon = $(option.element).data('icon');
 
-    // Redirigir al seleccionar
-    $("#buscador").on('select2:select', function(e){
-        const url = $(e.params.data.element).data('url');
-        if(url){
-            window.location.href = url;
+    if(icon){
+
+        return $(
+            '<span>' +
+            '<i class="bi '+icon+' me-2 text-primary"></i>' +
+            option.text +
+            '</span>'
+        );
+
+    }
+
+    return option.text;
+
+}
+
+function formatSelection(option){
+
+    if (!option.id) {
+        return option.text;
+    }
+
+    let icon = $(option.element).data('icon');
+
+    if(icon){
+
+        return $(
+            '<span>' +
+            '<i class="bi '+icon+' me-1"></i>' +
+            option.text +
+            '</span>'
+        );
+
+    }
+
+    return option.text;
+
+}
+
+$("#buscador").select2({
+
+    placeholder: "Buscar productos...",
+    allowClear: true,
+    width: '100%',
+    minimumInputLength: 1,
+
+    language:{
+        inputTooShort:function(){
+            return "Escribe al menos un carácter";
+        },
+        noResults:function(){
+            return "No se encontraron resultados";
+        },
+        searching:function(){
+            return "Buscando...";
         }
-    });
+    },
+
+    templateResult: formatOption,
+    templateSelection: formatSelection,
+    escapeMarkup:function(m){return m;}
+
 });
+
+$("#buscador").on('select2:select', function(e){
+
+    const url=$(e.params.data.element).data('url');
+
+    if(url){
+        window.location.href=url;
+    }
+
+});
+
+});
+
 </script>
 
 <script>

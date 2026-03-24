@@ -36,22 +36,32 @@
     <!-- Navbar y Menú -->
     <div class="sticky-top" style="z-index: 1030;">
        <x-navbar>
-    <x-slot name="slot_logo">{{ $generales['logo_empresa'] ?? '' }}</x-slot>
+    <x-slot name="slot_logo">{{ asset($generales['logo_empresa']) }}</x-slot>
     <x-slot name="slot_ruta_inicio">{{ $conoceMas['enlace_inicio']['url'] ?? '#' }}</x-slot>
-    <x-slot name="slot_opciones_buscador">
-    @foreach($buscador['DatosBuscador'] ?? [] as $categoria => $opciones)
-        <optgroup label="{{ $categoria }}">
-            @foreach($opciones as $opcion)
-                <option value="{{ $opcion['texto'] }}" data-icon="{{ $opcion['icono'] }}" data-url="{{ $opcion['url'] }}">
-                    {{ $opcion['texto'] }}
-                </option>
-            @endforeach
-        </optgroup>
-    @endforeach
-</x-slot>
+      <x-slot name="slot_opciones_buscador">
 
-    <!-- Aquí el botón y panel de filtros -->
-    <x-filtro :subcategorias="$subcategorias" />
+@foreach($buscador['DatosBuscador'] ?? [] as $categoria => $opciones)
+
+<optgroup label="{{ $categoria }}">
+
+    @foreach($opciones as $opcion)
+
+        <option
+            value="{{ $opcion['texto'] }}"
+            data-icon="{{ $opcion['icono'] }}"
+            data-url="{{ $opcion['url'] }}">
+
+            {{ $opcion['texto'] }}
+
+        </option>
+
+    @endforeach
+
+</optgroup>
+
+@endforeach
+
+</x-slot>
 </x-navbar>
 
 
@@ -222,54 +232,101 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-   <!-- Select2 Buscador -->
-<script>
+  <script>
+
 $(document).ready(function() {
-    function formatOption(option) {
-        if (!option.id) return option.text;
-        let icon = $(option.element).data('icon');
-        if (option.children) {
-            return $('<span style="font-weight:bold; font-size:14px;"><i class="bi ' + icon + ' me-2"></i>' + option.text + '</span>');
-        }
-        if (icon) {
-            return $('<span style="padding-left:15px;"><i class="bi ' + icon + ' me-2 text-primary"></i>' + option.text + '</span>');
-        }
+
+function formatOption(option) {
+
+    if (!option.id) {
         return option.text;
     }
 
-    $("#buscador").select2({
-        placeholder: "Buscar productos...",
-        allowClear: true,
-        width: '100%',
-        minimumInputLength: 1,
-        language: {
-            inputTooShort: function() {
-                return "Escribe al menos un carácter";
-            },
-            noResults: function() {
-                return "No se encontraron resultados";
-            },
-            searching: function() {
-                return "Buscando...";
-            }
-        },
-        templateResult: formatOption,
-        templateSelection: formatOption
-    });
+    let icon = $(option.element).data('icon');
 
-    // Redirigir al seleccionar
-    $("#buscador").on('select2:select', function(e){
-        const url = $(e.params.data.element).data('url');
-        if(url){
-            window.location.href = url;
+    if(icon){
+
+        return $(
+            '<span>' +
+            '<i class="bi '+icon+' me-2 text-primary"></i>' +
+            option.text +
+            '</span>'
+        );
+
+    }
+
+    return option.text;
+
+}
+
+function formatSelection(option){
+
+    if (!option.id) {
+        return option.text;
+    }
+
+    let icon = $(option.element).data('icon');
+
+    if(icon){
+
+        return $(
+            '<span>' +
+            '<i class="bi '+icon+' me-1"></i>' +
+            option.text +
+            '</span>'
+        );
+
+    }
+
+    return option.text;
+
+}
+
+$("#buscador").select2({
+
+    placeholder: "Buscar productos...",
+    allowClear: true,
+    width: '100%',
+    minimumInputLength: 1,
+
+    language:{
+        inputTooShort:function(){
+            return "Escribe al menos un carácter";
+        },
+        noResults:function(){
+            return "No se encontraron resultados";
+        },
+        searching:function(){
+            return "Buscando...";
         }
-    });
+    },
+
+    templateResult: formatOption,
+    templateSelection: formatSelection,
+    escapeMarkup:function(m){return m;}
+
 });
+
+$("#buscador").on('select2:select', function(e){
+
+    const url=$(e.params.data.element).data('url');
+
+    if(url){
+        window.location.href=url;
+    }
+
+});
+
+});
+
+</script>
+
 </script>
 
     <!-- Gestión de Código Postal -->
@@ -363,26 +420,120 @@ $(document).ready(function() {
         <input type="hidden" name="cp" id="cpHidden" value="{{ request('cp') }}">
     </form>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('btnFiltros');
-        const panel = document.getElementById('panelFiltros');
+document.addEventListener('DOMContentLoaded', function(){
 
-        if(!btn || !panel) return;
+    const slider = document.getElementById("precioRange");
+    const precioValor = document.getElementById("precioValor");
 
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    if(!slider || !precioValor) return;
+
+    // valor inicial con centavos
+    precioValor.innerHTML = "$" + parseFloat(slider.value).toFixed(2);
+
+    slider.oninput = function(){
+        precioValor.innerHTML = "$" + parseFloat(this.value).toFixed(2);
+    }
+
+});
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+    const categoriaSelect = document.getElementById('categoria');
+    const subcategoriaSelect = document.getElementById('subcategoria');
+
+    // evitar errores si no existe
+    if(!categoriaSelect || !subcategoriaSelect){
+        return;
+    }
+
+    categoriaSelect.addEventListener('change', function(){
+
+        let categoria = this.value;
+
+        subcategoriaSelect.innerHTML = '<option value="">Cargando...</option>';
+
+        if(categoria === ""){
+            subcategoriaSelect.innerHTML = '<option value="">Todas</option>';
+            return;
+        }
+
+        fetch(`/subcategorias/${categoria}`)
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Error en servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+
+            subcategoriaSelect.innerHTML = '<option value="">Todas</option>';
+
+            if(data.length === 0){
+                subcategoriaSelect.innerHTML += '<option value="">Sin resultados</option>';
+            }
+
+            data.forEach(sub => {
+                subcategoriaSelect.innerHTML += `
+                    <option value="${sub.id}">${sub.nombre}</option>
+                `;
+            });
+
+        })
+        .catch(error => {
+            console.error(error);
+            subcategoriaSelect.innerHTML = '<option value="">Error al cargar</option>';
         });
 
-        document.addEventListener('click', function() {
-            panel.style.display = 'none';
-        });
+    });
 
-        panel.addEventListener('click', function(e){
-            e.stopPropagation();
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+    const opciones = document.querySelectorAll('.rating-opcion');
+    const input = document.getElementById('ratingInput');
+    const texto = document.getElementById('ratingTexto');
+
+    if(!input || !texto) return;
+
+    function pintarEstrellas(valor){
+        let html = '';
+
+        if(valor === ''){
+            html = texto.dataset.default;
+        } else {
+            for(let i = 1; i <= 5; i++){
+                html += `<i class="bi ${i <= valor ? 'bi-star-fill text-warning' : 'bi-star text-muted'}"></i>`;
+            }
+        }
+
+        texto.innerHTML = html;
+    }
+
+    // estado inicial (cuando recarga)
+    pintarEstrellas(input.value);
+
+    opciones.forEach(op => {
+        op.addEventListener('click', function(e){
+            e.preventDefault();
+
+            const value = this.dataset.value;
+            input.value = value;
+
+            pintarEstrellas(value);
         });
     });
+
+});
 </script>
+
 </body>
 </html>

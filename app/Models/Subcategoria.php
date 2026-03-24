@@ -25,4 +25,9 @@ class Subcategoria extends Model
 
         return $subcategorias;
     }
+
+    public function categoria()
+{
+    return $this->belongsTo(\App\Models\Categoria::class, 'categoria_id');
+}
 }

@@ -58,20 +58,19 @@ private function DatosConoceMas()
 }
 
 private function DatosCategorias()
-{
-        $datos = [
-                'titulo' => 'Categorías',
-                'items' => [
-                    ['texto' => 'Comidas', 'url' => route('comida'), 'icono' => 'bi-basket'],
-                    ['texto' => 'Snack’s', 'url' => route('snack'), 'icono' => 'bi-egg-fried'],
-                    ['texto' => 'Postres', 'url' => route('postre'), 'icono' => 'bi-cup-straw'],
-                    ['texto' => 'Panadería', 'url' => route('panaderia'), 'icono' => 'bi-bag'],
-                    ['texto' => 'Productos de temporada', 'url' => route('producto_temporada'), 'icono' => 'bi-calendar-check'],
-                    ['texto' => 'Bebidas', 'url' => route('bebida'), 'icono' => 'bi-cup']
-                ]
-];
-return $datos;
-}
+    {
+        return [
+            'titulo'=>'Categorías',
+            'items'=>[
+                ['texto'=>'Comidas','url'=>route('productos', ['categoria'=>'comida']),'icono'=>'bi-basket'],
+                ['texto'=>'Snack’s','url'=>route('productos', ['categoria'=>'snack']),'icono'=>'bi-egg-fried'],
+                ['texto'=>'Postres','url'=>route('productos', ['categoria'=>'postres']),'icono'=>'bi-cup-straw'],
+                ['texto'=>'Panadería','url'=>route('productos', ['categoria'=>'panaderia']),'icono'=>'bi-bag'],
+                ['texto'=>'Bebidas','url'=>route('productos', ['categoria'=>'bebidas']),'icono'=>'bi-cup'],
+                ['texto'=>'Productos de temporada','url'=>route('productos', ['categoria'=>'producto_temporada']),'icono'=>'bi-calendar-check']
+            ]
+        ];
+    }
 
 private function DatosNuestrosComerciantes()
 {
@@ -135,27 +134,38 @@ private function DatosRedesSociales()
         return $datos;
 }
 
- private function DatosBuscador()
+private function DatosBuscador()
 {
-    // Trae productos con categoría, subcategoría y slug para URL
-    $productos = \App\Models\Producto::with(['categoria', 'subcategoria'])
-        ->get(['id', 'nombre', 'slug', 'categoria_id', 'subcategoria_id']);
+    $productos = \App\Models\Producto::with(['categoria','subcategoria'])->get();
 
     $datos = [];
 
     foreach ($productos as $prod) {
+
         $categoria = $prod->categoria->nombre ?? 'Otros';
-        $datos[$categoria][] = [
-            'texto' => $prod->nombre,
-            'icono' => 'bi-box', // puedes poner un icono genérico o según categoría
-            'url' => route('producto', $prod->slug) // ruta a la página del producto
-        ];
+
+        if(!isset($datos[$categoria])){
+            $datos[$categoria] = [];
+        }
+
+        if(count($datos[$categoria]) < 5){
+
+            $datos[$categoria][] = [
+
+                'texto' => ($prod->subcategoria->nombre ?? '') . ' > ' . $prod->nombre,
+
+                'icono' => $prod->icono, // icono desde BD
+
+                'url' => route('producto',$prod->slug)
+
+            ];
+
+        }
+
     }
 
-    return ['DatosBuscador' => $datos];
+    return ['DatosBuscador'=>$datos];
 }
-
-
 
     public function Cerca_Mi(){
         $datos = [];
