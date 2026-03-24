@@ -148,7 +148,7 @@ private function DatosBuscador()
 
     foreach ($productos as $prod) {
 
-        // 🔥 acceder correctamente a la categoría
+        // acceder correctamente a la categoría
         $categoria = optional($prod->subcategoria->categoria)->nombre ?? 'Otros';
 
         if (!isset($datos[$categoria])) {

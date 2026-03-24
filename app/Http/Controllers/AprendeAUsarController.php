@@ -135,37 +135,35 @@ private function DatosRedesSociales()
 
 private function DatosBuscador()
 {
-    $productos = \App\Models\Producto::with(['categoria','subcategoria'])->get();
+    $productos = \App\Models\Producto::with(['subcategoria.categoria'])->get();
 
     $datos = [];
 
     foreach ($productos as $prod) {
 
-        $categoria = $prod->categoria->nombre ?? 'Otros';
+        // acceder correctamente a la categoría
+        $categoria = optional($prod->subcategoria->categoria)->nombre ?? 'Otros';
 
-        if(!isset($datos[$categoria])){
+        if (!isset($datos[$categoria])) {
             $datos[$categoria] = [];
         }
 
-        if(count($datos[$categoria]) < 5){
+        if (count($datos[$categoria]) < 5) {
 
             $datos[$categoria][] = [
 
                 'texto' => ($prod->subcategoria->nombre ?? '') . ' > ' . $prod->nombre,
 
-                'icono' => $prod->icono, // icono desde BD
+                'icono' => $prod->icono,
 
-                'url' => route('producto',$prod->slug)
+                'url' => route('producto', $prod->slug)
 
             ];
-
         }
-
     }
 
-    return ['DatosBuscador'=>$datos];
+    return ['DatosBuscador' => $datos];
 }
-
 
 
     public function Clientes(){
