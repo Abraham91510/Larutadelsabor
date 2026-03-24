@@ -96,7 +96,7 @@
             :imagenes="$producto->imagenes->pluck('imagen')->toArray()"
             :rating="$producto->rating"
             :titulo="$producto->nombre"
-            :categoria="$producto->categoria->nombre ?? 'Otros'"
+            :categoria="optional($producto->subcategoria->categoria)->nombre ?? 'Otros'"
             :subcategoria="$producto->subcategoria->nombre ?? null"
             :precio="$producto->precio"
             :descripcion="$producto->descripcion ?? ''"
