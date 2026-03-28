@@ -1,4 +1,4 @@
-@extends('layouts.categoria')
+@extends('layouts.secundario')
 
 @section('titulopagina', $titulopagina)
 @section('favicon', $generales['logo_empresa'])
@@ -12,12 +12,6 @@
     h1 { font-family: 'Lilita One', cursive !important; }
     h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; font-weight: 700; }
 
-    .social-hover:hover,
-    .link-hover:hover { 
-        color: #FFC107 !important; 
-        transform: scale(1.2); 
-        transition: all 0.3s ease; 
-    }
 
     .no-productos {
         text-align: center;
@@ -64,7 +58,7 @@
     {{ $generales['eslogan_empresa'] }}
 @endsection
 
-@section('contenedor_1')
+@section('contenedor_contenido')
 <div class="container">
     <div class="row">
 

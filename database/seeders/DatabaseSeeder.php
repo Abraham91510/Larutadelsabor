@@ -26,13 +26,13 @@ class DatabaseSeeder extends Seeder
         $now = Carbon::now();
 
          DB::table('categorias')->insert([
-            ['id'=>1,'nombre'=>'Comida','slug'=>'comida','icono'=>'bi-folder','created_at'=>$now,'updated_at'=>$now],
-            ['id'=>2,'nombre'=>'Bebidas','slug'=>'bebidas','icono'=>'bi-folder','created_at'=>$now,'updated_at'=>$now],
-            ['id'=>3,'nombre'=>'Postres','slug'=>'postres','icono'=>'bi-folder','created_at'=>$now,'updated_at'=>$now],
-            ['id'=>4,'nombre'=>"Snack’s",'slug'=>'snack','icono'=>'bi-folder','created_at'=>$now,'updated_at'=>$now],
-            ['id'=>5,'nombre'=>'Panadería','slug'=>'panaderia','icono'=>'bi-folder','created_at'=>$now,'updated_at'=>$now],
-            ['id'=>6,'nombre'=>'Productos de temporada','slug'=>'producto_temporada','icono'=>'bi-folder','created_at'=>$now,'updated_at'=>$now],
-        ]);
+    ['id'=>1,'nombre'=>'Comida','slug'=>'comida','icono'=>'bi-basket','created_at'=>$now,'updated_at'=>$now],
+    ['id'=>2,'nombre'=>'Bebidas','slug'=>'bebidas','icono'=>'bi-cup','created_at'=>$now,'updated_at'=>$now],
+    ['id'=>3,'nombre'=>'Postres','slug'=>'postres','icono'=>'bi-cup-straw','created_at'=>$now,'updated_at'=>$now],
+    ['id'=>4,'nombre'=>"Snack’s",'slug'=>'snack','icono'=>'bi-egg-fried','created_at'=>$now,'updated_at'=>$now],
+    ['id'=>5,'nombre'=>'Panadería','slug'=>'panaderia','icono'=>'bi-bag','created_at'=>$now,'updated_at'=>$now],
+    ['id'=>6,'nombre'=>'Productos de temporada','slug'=>'producto_temporada','icono'=>'bi-calendar-check','created_at'=>$now,'updated_at'=>$now],
+]);
 
         // SUBCATEGORIAS
         DB::table('subcategorias')->insert([
@@ -114,6 +114,26 @@ class DatabaseSeeder extends Seeder
             ['producto_id'=>12,'imagen'=>'helado2.png'],
             ['producto_id'=>13,'imagen'=>'pastelhallowen.png'],
         ]);
+
+        // MENU
+DB::table('opciones_menu')->insert([
+    ['id'=>1,'nombre'=>'Categorías','slug'=>'categorias','orden'=>1,'created_at'=>$now,'updated_at'=>$now],
+    ['id'=>2,'nombre'=>'Comerciantes','slug'=>'comerciantes','orden'=>2,'created_at'=>$now,'updated_at'=>$now],
+    ['id'=>3,'nombre'=>'Aprende','slug'=>'aprende','orden'=>3,'created_at'=>$now,'updated_at'=>$now],
+]);
+
+DB::table('subopciones_menu')->insert([
+
+    // Comerciantes
+    ['opcion_id'=>2,'nombre'=>'Cerca de mí','url'=>'/cerca-mi','icono'=>'bi-geo-alt','created_at'=>$now,'updated_at'=>$now],
+    ['opcion_id'=>2,'nombre'=>'Mejor calificados','url'=>'/mejor-calificados','icono'=>'bi-star','created_at'=>$now,'updated_at'=>$now],
+    ['opcion_id'=>2,'nombre'=>'Nuevos','url'=>'/nuevos','icono'=>'bi-plus-circle','created_at'=>$now,'updated_at'=>$now],
+
+    // Aprende
+    ['opcion_id'=>3,'nombre'=>'Clientes','url'=>'/clientes','icono'=>'bi-person','created_at'=>$now,'updated_at'=>$now],
+    ['opcion_id'=>3,'nombre'=>'Comerciantes','url'=>'/comerciantes','icono'=>'bi-shop','created_at'=>$now,'updated_at'=>$now],
+    ['opcion_id'=>3,'nombre'=>'Pagos','url'=>'/pagos','icono'=>'bi-credit-card','created_at'=>$now,'updated_at'=>$now],
+]);
     
     }
 }

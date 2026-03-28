@@ -1,3 +1,5 @@
+@props(['menu' => [], 'categorias' => []])
+
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
 
@@ -5,80 +7,111 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-    
         <div class="collapse navbar-collapse" id="mainNavbar">
 
-        
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ $slot_inicio_url ?? '#' }}">
-                        {{ $slot_inicio_texto ?? 'Inicio' }}
-                    </a>
-                </li>
 
-        
+                {{-- INICIO DESDE BD --}}
+                @php
+                    $inicio = collect($menu)->firstWhere('slug', 'inicio');
+                @endphp
+                @if($inicio)
+                    @if($inicio->subopciones->count() > 0)
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                {{ $inicio->nombre ?? 'Inicio' }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                @foreach($inicio->subopciones as $sub)
+                                    <li>
+                                        <a class="dropdown-item" href="{{ $sub->url ?? '#' }}">
+                                            <i class="bi {{ $sub->icono ?? 'bi-tag' }} me-2"></i>
+                                            {{ $sub->nombre }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ $inicio->url ?? '#' }}">
+                                {{ $inicio->nombre ?? 'Inicio' }}
+                            </a>
+                        </li>
+                    @endif
+                @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Inicio
+                        </a>
+                    </li>
+                @endif
+
+                {{-- CATEGORÍAS --}}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         {{ $slot_categorias_titulo ?? 'Categorías' }}
                     </a>
                     <ul class="dropdown-menu">
-                        @if(isset($slot_categorias_items))
-                            {!! $slot_categorias_items !!}
+                        @if(isset($categorias['items']) && count($categorias['items']) > 0)
+                            @foreach($categorias['items'] as $item)
+                                <li>
+                                    <a class="dropdown-item" href="{{ $item['url'] ?? '#' }}">
+                                        <i class="bi {{ $item['icono'] ?? 'bi-tag' }} me-2"></i>
+                                        {{ $item['texto'] ?? 'Categoría' }}
+                                    </a>
+                                </li>
+                            @endforeach
                         @else
-                            <li><a class="dropdown-item" href="#">Comida</a></li>
-                            <li><a class="dropdown-item" href="#">Bebidas</a></li>
-                            <li><a class="dropdown-item" href="#">Postres</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-tag me-2"></i>Comida</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-tag me-2"></i>Bebidas</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-tag me-2"></i>Postres</a></li>
                         @endif
                     </ul>
                 </li>
 
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        {{ $slot_comerciantes_titulo ?? 'Comerciantes' }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        @if(isset($slot_comerciantes_items))
-                            {!! $slot_comerciantes_items !!}
+                {{-- MENÚ DINÁMICO DESDE BD --}}
+                @foreach($menu as $opcion)
+                    @if(!in_array($opcion->slug, ['categorias', 'inicio']))
+                        @if($opcion->subopciones->count() > 0)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    {{ $opcion->nombre }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @foreach($opcion->subopciones as $sub)
+                                        <li>
+                                            <a class="dropdown-item" href="{{ $sub->url ?? '#' }}">
+                                                <i class="bi {{ $sub->icono ?? 'bi-tag' }} me-2"></i>
+                                                {{ $sub->nombre }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
                         @else
-                            <li><a class="dropdown-item" href="#">Cerca de mí</a></li>
-                            <li><a class="dropdown-item" href="#">Mejor calificados</a></li>
-                            <li><a class="dropdown-item" href="#">Nuevos</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ $opcion->url ?? '#' }}">
+                                    {{ $opcion->nombre }}
+                                </a>
+                            </li>
                         @endif
-                    </ul>
-                </li>
+                    @endif
+                @endforeach
 
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        {{ $slot_como_funciona_titulo ?? 'Cómo funciona' }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        @if(isset($slot_como_funciona_items))
-                            {!! $slot_como_funciona_items !!}
-                        @else
-                            <li><a class="dropdown-item" href="#">Clientes</a></li>
-                            <li><a class="dropdown-item" href="#">Comerciantes</a></li>
-                            <li><a class="dropdown-item" href="#">Pagos</a></li>
-                        @endif
-                    </ul>
-                </li>
-
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ $slot_contacto_url ?? '#' }}">
-                        {{ $slot_contacto_texto ?? 'Contacto' }}
-                    </a>
-                </li>
             </ul>
 
-            
+            {{-- BOTONES --}}
             <div class="d-flex gap-3 align-items-center">
-    {!! $slot_acciones ?? '
-        <a href="#" class="btn btn-success rounded-pill"><i class="bi bi-person-plus"></i> Registro</a> 
-        <a href="#" class="btn btn-warning rounded-pill"><i class="bi bi-cart"></i> Carrito</a>' !!}
-</div>
+                {!! $slot_acciones ?? '
+                    <a href="#" class="btn btn-success rounded-pill">
+                        <i class="bi bi-person-plus"></i> Registro
+                    </a> 
+                    <a href="#" class="btn btn-warning rounded-pill">
+                        <i class="bi bi-cart"></i> Carrito
+                    </a>
+                ' !!}
+            </div>
 
         </div>
     </div>

@@ -1,29 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>@yield('titulopagina')</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset($__env->yieldContent('favicon')) }}">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.6/css/dataTables.dataTables.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
-
-    
-
-    @stack('css')
-</head>
-
-<body>
-
-<div class="p-5 text-white text-center fondo">
-    <h1>@yield('titulo')</h1>
-    <h1>@yield('subtitulo')</h1>
-</div>
+<x-header
+    :titulopagina="$titulopagina"
+    :favicon="$generales['logo_empresa']"
+    :titulo="$generales['nombre_empresa']"
+    :subtitulo="$generales['eslogan_empresa']"
+/>
 
 <div class="sticky-top" style="z-index: 1030;">
     <x-navbar>
@@ -57,43 +37,81 @@
 
     </x-navbar>
 
-    <x-menu>
-        <x-slot name="slot_inicio_texto">{{ $conoceMas['enlace_inicio']['texto'] }}</x-slot>
-        <x-slot name="slot_inicio_url">{{ $conoceMas['enlace_inicio']['url'] }}</x-slot>
+    <x-menu :menu="$menu" :categorias="$categorias">
 
-        <x-slot name="slot_categorias_titulo">{{ $categorias['titulo'] }}</x-slot>
-        <x-slot name="slot_categorias_items">
-            @foreach($categorias['items'] as $item)
-                <li><a class="dropdown-item" href="{{ $item['url'] }}">{{ $item['texto'] }}</a></li>
-            @endforeach
-        </x-slot>
+    {{-- INICIO --}}
+    <x-slot name="slot_inicio_texto">
+        {{ $conoceMas['enlace_inicio']['texto'] }}
+    </x-slot>
 
-        <x-slot name="slot_comerciantes_titulo">{{ $comerciantes['titulo'] }}</x-slot>
-        <x-slot name="slot_comerciantes_items">
-            @foreach($comerciantes['items'] as $item)
-                <li><a class="dropdown-item" href="{{ $item['url'] }}">{{ $item['texto'] }}</a></li>
-            @endforeach
-        </x-slot>
+    <x-slot name="slot_inicio_url">
+        {{ $conoceMas['enlace_inicio']['url'] }}
+    </x-slot>
 
-        <x-slot name="slot_como_funciona_titulo">{{ $aprende['titulo'] }}</x-slot>
-        <x-slot name="slot_como_funciona_items">
-            @foreach($aprende['items'] as $item)
-                <li><a class="dropdown-item" href="{{ $item['url'] }}">{{ $item['texto'] }}</a></li>
-            @endforeach
-        </x-slot>
+    {{-- CATEGORÍAS --}}
+    <x-slot name="slot_categorias_titulo">
+        {{ $categorias['titulo'] }}
+    </x-slot>
 
-        <x-slot name="slot_contacto_texto">{{ $conoceMas['enlace_contacto']['texto'] }}</x-slot>
-        <x-slot name="slot_contacto_url">{{ $conoceMas['enlace_contacto']['url'] }}</x-slot>
+    <x-slot name="slot_categorias_items">
+        @foreach($categorias['items'] as $item)
+            <li>
+                <a class="dropdown-item" href="{{ $item['url'] }}">
+                    {{ $item['texto'] }}
+                </a>
+            </li>
+        @endforeach
+    </x-slot>
 
-        <x-slot name="slot_acciones">
-            <a href="{{ $conoceMas['enlace_registro']['url'] }}" class="btn btn-success rounded-pill">
-                <i class="{{ $conoceMas['enlace_registro']['icono'] }}"></i> {{ $conoceMas['enlace_registro']['texto'] }}
-            </a>
-            <a href="{{ $conoceMas['enlace_carrito']['url'] }}" class="btn btn-warning rounded-pill">
-                <i class="{{ $conoceMas['enlace_carrito']['icono'] }}"></i> {{ $conoceMas['enlace_carrito']['texto'] }}
-            </a>
-        </x-slot>
-    </x-menu>
+    {{-- 🔥 MENÚ DINÁMICO DESDE BD --}}
+    @foreach($menu as $opcion)
+
+        @if($opcion->slug != 'categorias')
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    {{ $opcion->nombre }}
+                </a>
+
+                <ul class="dropdown-menu">
+                    @foreach($opcion->subopciones as $sub)
+                        <li>
+                            <a class="dropdown-item" href="{{ $sub->url }}">
+                                <i class="bi {{ $sub->icono }} me-2"></i>
+                                {{ $sub->nombre }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </li>
+
+        @endif
+
+    @endforeach
+
+    {{-- CONTACTO --}}
+    <x-slot name="slot_contacto_texto">
+        {{ $conoceMas['enlace_contacto']['texto'] }}
+    </x-slot>
+
+    <x-slot name="slot_contacto_url">
+        {{ $conoceMas['enlace_contacto']['url'] }}
+    </x-slot>
+
+    {{-- BOTONES --}}
+    <x-slot name="slot_acciones">
+        <a href="{{ $conoceMas['enlace_registro']['url'] }}" class="btn btn-success rounded-pill">
+            <i class="{{ $conoceMas['enlace_registro']['icono'] }}"></i>
+            {{ $conoceMas['enlace_registro']['texto'] }}
+        </a>
+
+        <a href="{{ $conoceMas['enlace_carrito']['url'] }}" class="btn btn-warning rounded-pill">
+            <i class="{{ $conoceMas['enlace_carrito']['icono'] }}"></i>
+            {{ $conoceMas['enlace_carrito']['texto'] }}
+        </a>
+    </x-slot>
+
+</x-menu>
 </div>
 
 @yield('carrusel_pagina_principal')
@@ -122,115 +140,13 @@
     @yield('contenedor_estadistica_crecimiento_empresa')
 </div>
 
-<footer class="pt-5" style="background: #0A0A0A;">
-    <div class="container px-4">
-        <div class="row gy-4">
-
-            
-            <div class="col-md-4 text-center text-md-start">
-                <div class="d-flex align-items-center mb-2 justify-content-center justify-content-md-start">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center me-2"
-                         style="width: 80px; height: 80px; overflow: hidden; background:#FFC107;">
-                        @isset($generales['logo_empresa'])
-                            <a href="{{ route('inicio') }}">
-                                <img src="{{ asset($generales['logo_empresa']) }}" alt="Logo {{ $generales['nombre_empresa'] }}" class="w-100 h-100" style="object-fit: cover;">
-                            </a>
-                        @else
-                            <i class="bi bi-shop text-white fs-1"></i>
-                        @endisset
-                    </div>
-                    <div>
-                        <h4 class="mb-0 fw-bold text-white" style="font-family:'Lilita One', cursive;">
-                            {{ $generales['nombre_empresa'] }}
-                        </h4>
-                        <p class="mb-0 text-white small" style="font-family:'Lilita One', cursive;">
-                            {{ $generales['eslogan_empresa'] }}
-                        </p>
-                    </div>
-                </div>
-                <p class="text-white small mt-2">{{ $generales['descripcion_empresa'] }}</p>
-            </div>
-
-            
-            <div class="col-md-2">
-                <h6 class="fw-bold mb-3 text-white">{{ $conoceMas['titulo'] ?? 'Conoce Más' }}</h6>
-                <ul class="list-unstyled">
-                    @foreach($conoceMas as $key => $link)
-                        @if(str_starts_with($key,'enlace'))
-                            <li>
-                                <a href="{{ $link['url'] }}" class="text-white text-decoration-none link-hover">
-                                    <i class="{{ $link['icono'] }} me-1"></i>{{ $link['texto'] }}
-                                </a>
-                            </li>
-                        @endif
-                    @endforeach
-                </ul>
-            </div>
-
-            
-            <div class="col-md-2">
-                <h6 class="fw-bold mb-3 text-white">{{ $categorias['titulo'] }}</h6>
-                <ul class="list-unstyled">
-                    @foreach($categorias['items'] as $item)
-                        <li><a href="{{ $item['url'] }}" class="text-white text-decoration-none link-hover">
-                            <i class="bi {{ $item['icono'] }} me-1"></i>{{ $item['texto'] }}
-                        </a></li>
-                    @endforeach
-                </ul>
-            </div>
-
-            
-            <div class="col-md-2">
-                <h6 class="fw-bold mb-3 text-white">{{ $comerciantes['titulo'] }}</h6>
-                <ul class="list-unstyled">
-                    @foreach($comerciantes['items'] as $item)
-                        <li><a href="{{ $item['url'] }}" class="text-white text-decoration-none link-hover">
-                            <i class="bi {{ $item['icono'] }} me-1"></i>{{ $item['texto'] }}
-                        </a></li>
-                    @endforeach
-                </ul>
-            </div>
-
-            
-            <div class="col-md-2">
-                <h6 class="fw-bold mb-3 text-white">{{ $aprende['titulo'] }}</h6>
-                <ul class="list-unstyled">
-                    @foreach($aprende['items'] as $item)
-                        <li><a href="{{ $item['url'] }}" class="text-white text-decoration-none link-hover">
-                            <i class="bi {{ $item['icono'] }} me-1"></i>{{ $item['texto'] }}
-                        </a></li>
-                    @endforeach
-                </ul>
-            </div>
-
-        </div>
-
-        
-        <div class="text-center mt-4">
-            <h6 class="fw-bold text-white">Redes Sociales</h6>
-            <ul class="list-unstyled d-flex justify-content-center gap-3">
-                @foreach(['facebook','instagram','x','whatsapp','youtube','tiktok'] as $red)
-                    @isset($redes[$red])
-                        <li>
-                            <a href="{{ $redes[$red]['url'] }}" target="_blank" class="text-white fs-4 social-hover">
-                                <i class="fa-brands {{ $redes[$red]['icono'] }}"></i>
-                            </a>
-                        </li>
-                    @endisset
-                @endforeach
-            </ul>
-        </div>
-
-        
-        <div class="text-center text-white small mt-4 pb-3 border-top pt-3">
-            <i class="{{ $generales['derechos_reservados_empresa']['icono'] }} me-1"></i>
-            {{ $generales['derechos_reservados_empresa']['anio'] }}
-            <span style="font-family:'Lilita One', cursive;">{{ $generales['nombre_empresa'] }}</span>.
-            {{ $generales['derechos_reservados_empresa']['texto'] }}
-        </div>
-
-    </div>
-</footer>
+<x-footer 
+    :generales="$generales"
+    :conoceMas="$conoceMas"
+    :categorias="$categorias"
+    :menu="$menu"
+    :redes="$redes"
+/>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

@@ -58,21 +58,29 @@ private function DatosConoceMas()
 }
 
 private function DatosCategorias()
+{
+    $categorias = \App\Models\Categoria::all();
+
+    return [
+        'titulo' => 'Categorías',
+        'items' => $categorias->map(function($cat){
+            return [
+                'texto' => $cat->nombre,
+                'url'   => route('productos', ['categoria' => $cat->slug]),
+                'icono' => $cat->icono ?? 'bi-tag'
+            ];
+        })->toArray() // <- importante convertir a array
+    ];
+}
+
+ private function DatosMenu()
     {
-        return [
-            'titulo'=>'Categorías',
-            'items'=>[
-                ['texto'=>'Comidas','url'=>route('productos', ['categoria'=>'comida']),'icono'=>'bi-basket'],
-                ['texto'=>'Snack’s','url'=>route('productos', ['categoria'=>'snack']),'icono'=>'bi-egg-fried'],
-                ['texto'=>'Postres','url'=>route('productos', ['categoria'=>'postres']),'icono'=>'bi-cup-straw'],
-                ['texto'=>'Panadería','url'=>route('productos', ['categoria'=>'panaderia']),'icono'=>'bi-bag'],
-                ['texto'=>'Bebidas','url'=>route('productos', ['categoria'=>'bebidas']),'icono'=>'bi-cup'],
-                ['texto'=>'Productos de temporada','url'=>route('productos', ['categoria'=>'producto_temporada']),'icono'=>'bi-calendar-check']
-            ]
-        ];
+        return \App\Models\OpcionMenu::with('subopciones')
+            ->orderBy('orden')
+            ->get();
     }
 
-private function DatosNuestrosComerciantes()
+/*private function DatosNuestrosComerciantes()
 {
         $datos = [
                 'titulo' => 'Nuestros Comerciantes',
@@ -96,7 +104,7 @@ private function DatosAprendeAUsar()
                 ]
         ];   
 return $datos;     
-}
+} */
 
 private function DatosRedesSociales()
 {
@@ -173,8 +181,7 @@ private function DatosBuscador()
     $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
     $datos['conoceMas']    = $this->DatosConoceMas();
     $datos['categorias']   = $this->DatosCategorias();
-    $datos['comerciantes'] = $this->DatosNuestrosComerciantes();
-    $datos['aprende']      = $this->DatosAprendeAUsar();
+    $datos['menu']         = $this->DatosMenu();
     $datos['redes']        = $this->DatosRedesSociales();
     $datos['buscador']     = $this->DatosBuscador();
     $datos['titulopagina'] = 'Contacto';
