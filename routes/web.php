@@ -8,6 +8,11 @@ use App\Http\Controllers\NuestrosComerciantesController;
 use App\Http\Controllers\AprendeAUsarController;
 use App\Http\Controllers\PrincipalController;
 
+use App\Http\Controllers\Administrador\AuthController;
+use App\Http\Controllers\Administrador\DashboardController;
+
+use App\Http\Controllers\ComentarioController;
+
 // Ruta principal
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +43,33 @@ Route::get('/producto/{slug}', function($slug) {
 Route::get('/productos/{categoria?}', [CategoriaController::class, 'Productos'])->name('productos');
 
 Route::get('/subcategorias/{categoria}', [CategoriaController::class, 'SubcategoriasAjax']);
+
+
+
+Route::get('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'loginPost']);
+
+Route::get('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'saveRegister']);
+
+Route::middleware(['auth.admin', 'session.timeout'])->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/logout', [AuthController::class, 'logout']);
+
+});
+
+
+
+// Mostrar vista de comentarios
+Route::get('/comentarios', [ComentarioController::class, 'index'])
+    ->name('comentarios');
+
+// Guardar comentario
+Route::post('/comentarios', [ComentarioController::class, 'store'])
+    ->name('comentarios.store');
+
+
 
 
 /* 

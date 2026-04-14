@@ -12,6 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         //
+
+        $middleware->alias([
+        'auth.admin' => \App\Http\Middleware\Administrador\AuthAdmin::class,
+        'session.timeout' => \App\Http\Middleware\Administrador\SessionTimeout::class,
+    ]);
+
+
+    
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
