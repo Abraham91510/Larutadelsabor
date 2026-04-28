@@ -88,15 +88,13 @@
         </div>
 
          <!-- Slot para contenido extra (botón filtro, otros botones, etc) -->
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-3 ms-3">
     {{ $slot }}
-</div>
 
-<!-- Botón Avanzada -->
-<!-- NUEVO BOTÓN AVANZADA -->
-<a href="{{ route('productos') }}" class="btn btn-primary rounded-pill">
-    <i class="bi bi-funnel me-1"></i> Avanzada
-</a>
+    <a href="{{ route('productos') }}" class="btn btn-primary rounded-pill">
+        <i class="bi bi-funnel me-1"></i> Avanzada
+    </a>
+</div>
 
     </div>
 </nav>

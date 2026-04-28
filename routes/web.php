@@ -13,6 +13,19 @@ use App\Http\Controllers\Administrador\DashboardController;
 
 use App\Http\Controllers\ComentarioController;
 
+use App\Http\Controllers\Administrador\QuienesSomosController;
+
+use App\Http\Controllers\Administrador\CarruselPaginaPrincipalController;
+
+use App\Http\Controllers\Administrador\ProductoController;
+
+use App\Http\Controllers\Administrador\PorqueElegirnosController;
+
+use App\Http\Controllers\Administrador\BeneficioController;
+
+use App\Http\Controllers\Administrador\TipoDeServicioController;
+
+
 // Ruta principal
 Route::get('/', function () {
     return view('welcome');
@@ -45,33 +58,119 @@ Route::get('/productos/{categoria?}', [CategoriaController::class, 'Productos'])
 Route::get('/subcategorias/{categoria}', [CategoriaController::class, 'SubcategoriasAjax']);
 
 
+Route::get('/login/admin', [AuthController::class, 'login'])->name('login');
+Route::post('/login/admin', [AuthController::class, 'loginPost']);
 
-Route::get('/login', [AuthController::class, 'login']);
-Route::post('/login', [AuthController::class, 'loginPost']);
+Route::get('/registrar/admin', [AuthController::class, 'register']);
+Route::post('/registrar/admin', [AuthController::class, 'saveRegister']);
 
-Route::get('/register', [AuthController::class, 'register']);
-Route::post('/register', [AuthController::class, 'saveRegister']);
+Route::get('/quienes-somos', [QuienesSomosController::class, 'publico']);
 
-Route::middleware(['auth.admin', 'session.timeout'])->group(function () {
+Route::get('/comentarios', [ComentarioController::class, 'index'])->name('comentarios');
+Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
 
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/logout', [AuthController::class, 'logout']);
 
+/*
+|--------------------------------------------------------------------------
+| 🔐 DASHBOARD (ADMIN + INVITADO)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    \App\Http\Middleware\Administrador\AuthAdmin::class,
+    'session.timeout'
+])
+->prefix('dashboard')
+->group(function () {
+
+    // 🏠 DASHBOARD PRINCIPAL (Ambos entran)
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    // 🚪 LOGOUT
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    /*
+    |--------------------------------------------------------------------------
+    | RUTAS PROTEGIDAS POR ROL (Solo Admin puede modificar)
+    |--------------------------------------------------------------------------
+    */
+    
+    // 🧾 QUIENES SOMOS
+    Route::prefix('quienes-somos')->group(function () {
+        Route::get('/', [QuienesSomosController::class, 'index']); // Invitado ve la lista
+        
+        // Solo Admin guarda, edita o borra
+        Route::middleware('role:admin')->group(function() {
+            Route::post('/store', [QuienesSomosController::class, 'store']);
+            Route::put('/{id}', [QuienesSomosController::class, 'update']);
+            Route::get('/toggle/{id}', [QuienesSomosController::class, 'toggle']);
+            Route::delete('/{id}', [QuienesSomosController::class, 'destroy']);
+        });
+    });
+
+    // 📦 PRODUCTOS
+    Route::prefix('productos')->group(function () {
+        Route::get('/', [ProductoController::class, 'index']); // Invitado ve la lista
+        Route::get('/create', [ProductoController::class, 'create']); // Invitado puede ver el form si quieres
+
+        Route::middleware('role:admin')->group(function() {
+            Route::post('/store', [ProductoController::class, 'store']);
+            Route::put('/{id}', [ProductoController::class, 'update']);
+            Route::delete('/{id}', [ProductoController::class, 'destroy']);
+            Route::get('/toggle/{id}', [ProductoController::class, 'toggle']);
+            Route::get('/destacado/{id}', [ProductoController::class, 'toggleDestacado']);
+        });
+    });
+
+    // 🎠 CARRUSEL
+    Route::prefix('carrusel')->group(function () {
+        Route::get('/', [CarruselPaginaPrincipalController::class, 'index']);
+        
+        Route::middleware('role:admin')->group(function() {
+            Route::post('/store', [CarruselPaginaPrincipalController::class, 'store']);
+            Route::put('/{id}', [CarruselPaginaPrincipalController::class, 'update']);
+            Route::get('/toggle/{id}', [CarruselPaginaPrincipalController::class, 'toggle']);
+            Route::delete('/{id}', [CarruselPaginaPrincipalController::class, 'destroy']);
+        });
+    });
+
+    // 🎁 BENEFICIOS
+    Route::prefix('beneficios')->group(function () {
+        Route::get('/', [BeneficioController::class, 'index']);
+
+        Route::middleware('role:admin')->group(function() {
+            Route::post('/store', [BeneficioController::class, 'store']);
+            Route::put('/{id}', [BeneficioController::class, 'update']);
+            Route::get('/toggle/{id}', [BeneficioController::class, 'toggle']);
+            Route::delete('/{id}', [BeneficioController::class, 'destroy']);
+        });
+    });
+
+    // ⭐ PORQUE ELEGIRNOS Y SERVICIOS (Siguen el mismo patrón)
+    Route::prefix('porque-elegirnos')->group(function () {
+        Route::get('/', [PorqueElegirnosController::class, 'index']);
+        Route::middleware('role:admin')->post('/store', [PorqueElegirnosController::class, 'store']);
+        // ... repites middleware('role:admin') para put, toggle y delete
+    });
+
+    
+    // 🧰 TIPOS DE SERVICIOS (YA CORREGIDO)
+    
+    Route::prefix('tipos-servicios')->group(function () {
+
+        Route::get('/admin', [TipoDeServicioController::class, 'index']);
+
+        Route::middleware('role:admin')->group(function () {
+            Route::post('/store', [TipoDeServicioController::class, 'store']);
+            Route::put('/{id}', [TipoDeServicioController::class, 'update']);
+            Route::get('/toggle/{id}', [TipoDeServicioController::class, 'toggle']);
+            Route::delete('/{id}', [TipoDeServicioController::class, 'destroy']);
+        });
+
+    });
+
+    
 });
-
-
-
-// Mostrar vista de comentarios
-Route::get('/comentarios', [ComentarioController::class, 'index'])
-    ->name('comentarios');
-
-// Guardar comentario
-Route::post('/comentarios', [ComentarioController::class, 'store'])
-    ->name('comentarios.store');
-
-
-
-
 /* 
 Rutas comentadas de ejemplo
 Route::get('/', function () {

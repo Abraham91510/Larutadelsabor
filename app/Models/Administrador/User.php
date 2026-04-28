@@ -12,7 +12,8 @@ class User extends Model
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'foto'
     ];
 
     public function setPasswordAttribute($value)

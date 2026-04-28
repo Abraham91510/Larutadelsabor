@@ -45,17 +45,9 @@
 @endsection
 
 @section('carrusel_pagina_principal')
-<x-carrusel>
-    <x-slot name="titulo1">Apoya la Economía Local</x-slot>
-    <x-slot name="texto1">Compra productos locales de comida y ayuda a crecer a tu comunidad.</x-slot>
-    <x-slot name="imagen1">/Imagenes/imagen05.jpg</x-slot>
-    <x-slot name="icono1"><i class="bi bi-hand-thumbs-up fs-3"></i></x-slot>
 
-    <x-slot name="titulo2">Prueba la nueva Hamburguesa "Magnificarne"</x-slot>
-    <x-slot name="texto2">Producto 100% con carne natural a 99 MXN.</x-slot>
-    <x-slot name="imagen2">/Imagenes/imagen06.png</x-slot>
-    <x-slot name="icono2"><i class="bi bi-basket2-fill fs-3"></i></x-slot>
-</x-carrusel>
+<x-carrusel :carrusel="$carrusel" />
+
 @endsection
 
 @section('contenedor_quienes_somos')
@@ -68,68 +60,43 @@
 
     <div class="row g-4">
 
+        @foreach($empresa as $item)
         <x-card6>
-        <x-slot name="bg">bg-white</x-slot>
-        <x-slot name="icono"><i class="bi bi-bullseye"></i></x-slot>
-        <x-slot name="color_icono">text-success</x-slot>
-        <x-slot name="titulo">Misión</x-slot>
-        <x-slot name="texto">
-            Ofrecer una plataforma digital integral que facilite la
-            localización y contratación de comerciantes ambulantes de
-            comida, permitiendo a los usuarios encontrar opciones
-            cercanas de manera rápida y confiable, mientras se brinda a
-            los prestadores una herramienta accesible para mejorar su
-            visibilidad, organización y ventas. La Ruta Del Sabor promueve
-            el uso de tecnología segura, pagos digitales validados y medios
-            de movilidad de bajo impacto, fortaleciendo la economía local y
-            el consumo responsable dentro de la comunidad.
-        </x-slot>
-         <x-slot name="posicion_Imagen">izquierda</x-slot>
-        <x-slot name="imagen">/Imagenes/imagen12.png</x-slot>
 
-    </x-card6>
+            <x-slot name="bg">bg-white</x-slot>
 
-    <x-card6>
-        <x-slot name="bg">bg-white</x-slot>
-        <x-slot name="icono"><i class="bi bi-eye"></i></x-slot>
-        <x-slot name="color_icono">text-primary</x-slot>
-        <x-slot name="titulo">Visión</x-slot>
-        <x-slot name="texto">
-            Consolidarse como un referente en servicios digitales de
-            comida ambulante, integrando innovación tecnológica,
-            accesibilidad e inclusión para transformar el comercio móvil en
-            una actividad más ordenada, segura y sostenible. La Ruta Del
-            Sabor busca ser reconocida por conectar personas con la
-            gastronomía local de forma eficiente, apoyar el crecimiento de
-            los comerciantes ambulantes y contribuir a ciudades más
-            cercanas, dinámicas y ambientalmente responsables.
-        </x-slot>
-        <x-slot name="posicion_Imagen">derecha</x-slot>
-        <x-slot name="imagen">Imagenes/imagen13.png</x-slot>
-    </x-card6>
+            <x-slot name="icono">
+                <i class="{{ $item->icono }}"></i>
+            </x-slot>
 
-    <x-card6>
-        <x-slot name="bg">bg-white</x-slot>
-        <x-slot name="icono"><i class="bi bi-flag"></i></x-slot>
-        <x-slot name="color_icono">text-warning</x-slot>
-        <x-slot name="titulo">Objetivo</x-slot>
-        <x-slot name="texto">
-            Conectar de manera eficiente y segura a clientes con
-            comerciantes ambulantes de comida mediante una plataforma
-            digital con geolocalización en tiempo real que prioriza la
-            cercanía y la disponibilidad. Además, impulsa la economía
-            local, reduce el impacto ambiental y garantiza pagos digitales
-            sin efectivo mediante el uso de códigos QR para validar el
-            servicio y liberar el pago automáticamente, ofreciendo también
-            una experiencia accesible e inclusiva para todos los usuarios.
+            <x-slot name="color_icono">
+                {{ $loop->index == 0 ? 'text-success' : ($loop->index == 1 ? 'text-primary' : 'text-warning') }}
+            </x-slot>
 
-        </x-slot>
-         <x-slot name="posicion_Imagen">izquierda</x-slot>
-        <x-slot name="imagen">Imagenes\imagen11.png</x-slot>
-    </x-card6>
-         </div>
-</x-cuadro> 
+            <x-slot name="titulo">
+                {{ $item->titulo }}
+            </x-slot>
+
+            <x-slot name="texto">
+            {{ $item->descripcion }}
+            </x-slot>
+
+            <x-slot name="posicion_Imagen">
+                {{ $loop->index % 2 == 0 ? 'izquierda' : 'derecha' }}
+            </x-slot>
+
+            <x-slot name="imagen">
+                {{ $item->imagen }}
+            </x-slot>
+
+        </x-card6>
+        @endforeach
+
+    </div>
+</x-cuadro>
 @endsection
+
+
 
 @section('contenedor_porque_elegirnos')
 <div class="text-center mb-5">
@@ -138,54 +105,18 @@
         Conecta con comerciantes de comida ambulante
     </h3>
 </div>
- <div class="row g-4">
-        <x-card3>
-            <x-slot name="bg">bg-white</x-slot>
-            <x-slot name="icono"><i class="bi bi-geo-alt-fill"></i></x-slot>
-            <x-slot name="color_icono">text-success</x-slot>
-            <x-slot name="titulo">Geolocalización en Tiempo Real</x-slot>
-            <x-slot name="texto">Encuentra comerciantes de comida cerca de ti al instante.</x-slot>
-        </x-card3>
 
+<div class="row g-4">
+    @foreach($beneficios as $item)
         <x-card3>
             <x-slot name="bg">bg-white</x-slot>
-            <x-slot name="icono"><i class="bi bi-shield-lock-fill"></i></x-slot>
-            <x-slot name="color_icono">text-primary</x-slot>
-            <x-slot name="titulo">Pagos digitales 100% Seguros</x-slot>
-            <x-slot name="texto">Transacciones digitales protegidas con encriptación.</x-slot>
+            <x-slot name="icono"><i class="{{ $item->icono }}"></i></x-slot>
+            <x-slot name="color_icono">{{ $item->color_icono }}</x-slot>
+            <x-slot name="titulo">{{ $item->titulo }}</x-slot>
+            <x-slot name="texto">{{ $item->texto }}</x-slot>
         </x-card3>
-
-        <x-card3>
-            <x-slot name="bg">bg-white</x-slot>
-            <x-slot name="icono"><i class="bi bi-clock-fill"></i></x-slot>
-            <x-slot name="color_icono">text-warning</x-slot>
-            <x-slot name="titulo">Entrega Rápida</x-slot>
-            <x-slot name="texto">Recibe tu comida en minutos o al instante.</x-slot>
-        </x-card3>
-
-        <x-card3>
-            <x-slot name="bg">bg-white</x-slot>
-            <x-slot name="icono"><i class="bi bi-people-fill"></i></x-slot>
-            <x-slot name="color_icono">text-orange</x-slot>
-            <x-slot name="titulo">Apoya Local</x-slot>
-            <x-slot name="texto">Conecta directamente con vendedores de comida locales.</x-slot>
-        </x-card3>
-
-        <x-card3>
-            <x-slot name="bg">bg-white</x-slot>
-            <x-slot name="icono"><i class="bi bi-star-fill"></i></x-slot>
-            <x-slot name="color_icono">text-purple</x-slot>
-            <x-slot name="titulo">Calificaciones Verificadas</x-slot>
-            <x-slot name="texto">Lee reseñas de clientes reales.</x-slot>
-        </x-card3>
-
-        <x-card3>
-            <x-slot name="bg">bg-white</x-slot>
-            <x-slot name="color_icono">text-danger</x-slot>
-            <x-slot name="titulo">Crecimiento Continuo</x-slot>
-            <x-slot name="texto">Más comerciantes de comida disponibles cada día.</x-slot>
-        </x-card3>
-        </div>
+    @endforeach
+</div>
 @endsection
 
 @section('contenedor_beneficios')
@@ -199,88 +130,40 @@
     <x-slot name="color_subtitulo">#FFFFFF</x-slot>
     <x-slot name="background">#F5C29B</x-slot>
 
-    <div class="row g-4">
-
+   <div class="row g-4">
+        @foreach($beneficios_bancarios as $item)
             <x-card2>
                 <x-slot name="bg">bg-white</x-slot>
-                <x-slot name="icono"><i class="bi bi-currency-dollar"></i></x-slot>
-                <x-slot name="color_icono">text-success</x-slot>
-                <x-slot name="titulo">Pagos digitales</x-slot>
-                <x-slot name="texto">Recibir pagos de manera digital.</x-slot>
+                <x-slot name="icono"><i class="{{ $item->icono }}"></i></x-slot>
+                <x-slot name="color_icono">{{ $item->color_icono }}</x-slot>
+                <x-slot name="titulo">{{ $item->titulo }}</x-slot>
+                <x-slot name="texto">{{ $item->texto }}</x-slot>
             </x-card2>
+        @endforeach
+    </div>
 
-            <x-card2>
-                <x-slot name="bg">bg-white</x-slot>
-                <x-slot name="icono"><i class="bi bi-qr-code"></i></x-slot>
-                <x-slot name="color_icono">text-primary</x-slot>
-                <x-slot name="titulo">Retiros con QR</x-slot>
-                <x-slot name="texto">Retirar dinero mediante código QR en cajeros autorizados.</x-slot>
-            </x-card2>
-
-            <x-card2>
-            <x-slot name="bg">bg-white</x-slot>
-                <x-slot name="icono"><i class="bi bi-credit-card"></i></x-slot>
-                <x-slot name="color_icono">text-warning</x-slot>
-                <x-slot name="titulo">Tarjeta virtual</x-slot>
-                <x-slot name="texto">Generar una tarjeta virtual para el uso de los fondos.</x-slot>
-            </x-card2>
-            </div>
 </x-cuadro>
 @endsection
 
 
 @section('contenedor_tipos_servicios')
-    
     <div class="text-center mb-5">
         <h1 class="fw-bold">Tipos de servicios</h1>
-        <p class="text-muted">
-            Conoce las diferentes formas en que puedes contratar servicios
-        </p>
+        <p class="text-muted">Conoce las diferentes formas en que puedes contratar servicios</p>
     </div>
 
     <div class="row g-4">
-
-        <x-card4 orientacion="vertical" bg="bg-success bg-opacity-10">
-            <x-slot name="icono"><i class="bi bi-calendar-event"></i></x-slot>
-            <x-slot name="color_icono">text-success</x-slot>
-            <x-slot name="titulo">Servicio programado</x-slot>
-            <x-slot name="texto">
-                <ul class="mb-0">
-                    <li>El cliente agenda el servicio con anticipación.</li>
-                    <li>Pago por transferencia bancaria dentro de la plataforma.</li>
-                    <li>Confirmación de fecha, horario y alcance.</li>
-                </ul>
-            </x-slot>
-        </x-card4>
-
-        <x-card4 orientacion="vertical" bg="bg-primary bg-opacity-10">
-            <x-slot name="icono"><i class="bi bi-lightning-fill"></i></x-slot>
-            <x-slot name="color_icono">text-primary</x-slot>
-            <x-slot name="titulo">Servicio inmediato</x-slot>
-            <x-slot name="texto">
-                <ul class="mb-0">
-                    <li>Contratación de un prestador cercano y disponible.</li>
-                    <li>Pago previo por transferencia bancaria.</li>
-                    <li>Ideal para servicios rápidos o compras locales.</li>
-                </ul>
-            </x-slot>
-        </x-card4>
-
-        <x-card4 orientacion="vertical" bg="bg-warning bg-opacity-10">
-            <x-slot name="icono"><i class="bi bi-map-fill"></i></x-slot>
-            <x-slot name="color_icono">text-warning</x-slot>
-            <x-slot name="titulo">Servicios por ruta local</x-slot>
-            <x-slot name="texto">
-                <ul class="mb-0">
-                    <li>Aplicable a comerciantes ambulantes o móviles.</li>
-                    <li>Visualización de ruta en tiempo real.</li>
-                    <li>Reserva de productos o atención cercana.</li>
-                </ul>
-            </x-slot>
-        </x-card4>
-
+        @foreach($tipos_servicios as $item)
+            <x-card4 orientacion="vertical" bg="{{ $item->bg_clase }}">
+                <x-slot name="icono"><i class="{{ $item->icono }}"></i></x-slot>
+                <x-slot name="color_icono">{{ $item->color_icono }}</x-slot>
+                <x-slot name="titulo">{{ $item->titulo }}</x-slot>
+                <x-slot name="texto">
+                    {!! $item->texto !!}
+                </x-slot>
+            </x-card4>
+        @endforeach
     </div>
-
 @endsection
 
 @section('contenedor_comerciantes_destacados')
@@ -296,56 +179,22 @@
     <x-slot name="background">#A9DFBF</x-slot>
 
         <div class="row g-4">
+@foreach($destacados as $producto)
 
-            <x-card5>
-                <x-slot name="imagen">
-                    Imagenes\imagen07.jpg
-                </x-slot>
-                <x-slot name="rating">4.9</x-slot>
-                <x-slot name="titulo">Don Pepe - Tacos al Pastor</x-slot>
-                <x-slot name="categoria">Tacos</x-slot>
-                <x-slot name="distancia">0.5 km</x-slot>
-                <x-slot name="resenas">245</x-slot>
-                <x-slot name="href">{{ route('productos') }}</x-slot>
-            </x-card5>
+<x-card5
+    :imagenes="$producto->imagenes->pluck('imagen')->toArray()"
+    :rating="$producto->rating"
+    :titulo="$producto->nombre"
+    :categoria="optional($producto->subcategoria->categoria)->nombre ?? 'Otros'"
+    :precio="$producto->precio"
+    :descripcion="$producto->descripcion"
+    :distancia="$producto->distancia ?? '0 km'"
+    :resenas="$producto->resenas ?? 0"
+    :href="route('producto', $producto->slug)"
+/>
 
-            <x-card5>
-                <x-slot name="imagen">
-                Imagenes\imagen08.jpg
-                </x-slot>
-                <x-slot name="rating">4.8</x-slot>
-                <x-slot name="titulo">Doña María - Cochinita</x-slot>
-                <x-slot name="categoria">Comida Yucateca</x-slot>
-                <x-slot name="distancia">1.2 km</x-slot>
-                <x-slot name="resenas">198</x-slot>
-                <x-slot name="href">{{ route('productos') }}</x-slot>
-            </x-card5>
-
-            <x-card5>
-                <x-slot name="imagen">
-                    Imagenes\imagen09.jpg
-                </x-slot>
-                <x-slot name="rating">4.7</x-slot>
-                <x-slot name="titulo">Carnitas Artesanales</x-slot>
-                <x-slot name="categoria">Carnes</x-slot>
-                <x-slot name="distancia">0.8 km</x-slot>
-                <x-slot name="resenas">167</x-slot>
-                <x-slot name="href">{{ route('productos') }}</x-slot>
-            </x-card5>
-
-            <x-card5>
-                <x-slot name="imagen">
-                    Imagenes\imagen10.jpg
-                </x-slot>
-                <x-slot name="rating">4.9</x-slot>
-                <x-slot name="titulo">Pupusas Típicas</x-slot>
-                <x-slot name="categoria">Comida Centroamericana</x-slot>
-                <x-slot name="distancia">1.5 km</x-slot>
-                <x-slot name="resenas">212</x-slot>
-                <x-slot name="href">{{ route('productos') }}</x-slot>
-            </x-card5>
-
-        </div>
+@endforeach
+</div>
 </x-cuadro>
 @endsection
 

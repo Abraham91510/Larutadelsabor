@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->string('slug')->unique();
 
+            $table->string('url')->nullable();
+
             $table->integer('orden')->default(0);
 
             $table->timestamps();

@@ -26,6 +26,10 @@ return new class extends Migration
 
             $table->unsignedBigInteger('subcategoria_id');
 
+            $table->boolean('is_active')->default(1);
+
+            $table->boolean('is_destacado')->default(0);
+
             $table->timestamps();
 
             $table->foreign('subcategoria_id')

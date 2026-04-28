@@ -104,6 +104,11 @@
             {{-- BOTONES --}}
             <div class="d-flex gap-3 align-items-center">
                 {!! $slot_acciones ?? '
+                    <a href="#" class="btn btn-outline-dark rounded-pill">
+        <i class="bi bi-person-circle me-1"></i>
+        Iniciar sesión
+    </a>
+                    
                     <a href="#" class="btn btn-success rounded-pill">
                         <i class="bi bi-person-plus"></i> Registro
                     </a> 

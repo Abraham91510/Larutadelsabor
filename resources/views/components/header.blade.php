@@ -21,7 +21,33 @@
 
 <body>
 
-<div class="p-5 text-white text-center fondo">
-    <h1>{{ $titulo ?? '' }}</h1>
-    <h1>{{ $subtitulo ?? '' }}</h1>
+<div class="p-5 text-center text-white position-relative"
+     style="
+        background-image: url('{{ asset($generales['banner'] ?? 'Imagenes/La Ruta Del Sabor_LogoPortada.png') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 250px;
+     ">
+
+    <!-- overlay oscuro -->
+    <div class="position-absolute top-0 start-0 w-100 h-100"
+         style="background: rgba(0,0,0,0.5);"></div>
+
+    <!-- contenido -->
+    <div class="position-relative">
+
+        <h1 class="d-inline-block px-4 py-2 rounded-pill shadow"
+            style="background: rgba(0,0,0,0.35); backdrop-filter: blur(6px);">
+            {{ $titulo ?? '' }}
+        </h1>
+
+        <br>
+
+        <h4 class="d-inline-block mt-3 px-3 py-1 rounded-pill shadow"
+            style="background: rgba(0,0,0,0.25); backdrop-filter: blur(6px);">
+            {{ $subtitulo ?? '' }}
+        </h4>
+
+    </div>
 </div>

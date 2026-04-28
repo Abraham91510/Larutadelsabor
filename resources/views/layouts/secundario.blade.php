@@ -100,17 +100,30 @@
 
     {{-- BOTONES --}}
     <x-slot name="slot_acciones">
-        <a href="{{ $conoceMas['enlace_registro']['url'] }}" class="btn btn-success rounded-pill">
-            <i class="{{ $conoceMas['enlace_registro']['icono'] }}"></i>
-            {{ $conoceMas['enlace_registro']['texto'] }}
-        </a>
 
-        <a href="{{ $conoceMas['enlace_carrito']['url'] }}" class="btn btn-warning rounded-pill">
-            <i class="{{ $conoceMas['enlace_carrito']['icono'] }}"></i>
-            {{ $conoceMas['enlace_carrito']['texto'] }}
-        </a>
-    </x-slot>
+    <!-- INICIAR SESIÓN -->
+    <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill">
+        <i class="bi bi-person-circle me-1"></i>
+        Iniciar sesión
+    </a>
 
+    <!-- REGISTRO -->
+    <a href="{{ $conoceMas['enlace_registro']['url'] }}" class="btn btn-success rounded-pill">
+        <i class="{{ $conoceMas['enlace_registro']['icono'] }}"></i>
+        {{ $conoceMas['enlace_registro']['texto'] }}
+    </a>
+
+    <!-- CARRITO -->
+    <a href="{{ $conoceMas['enlace_carrito']['url'] }}" class="btn btn-warning rounded-pill position-relative">
+        <i class="{{ $conoceMas['enlace_carrito']['icono'] }}"></i>
+        {{ $conoceMas['enlace_carrito']['texto'] }}
+
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            0
+        </span>
+    </a>
+
+</x-slot>
 </x-menu>
 </div>
 
@@ -428,6 +441,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
 });
 </script>
-
+@stack('js')
 </body>
 </html>

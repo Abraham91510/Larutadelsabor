@@ -9,82 +9,26 @@ use Yajra\DataTables\DataTables;
 use App\Models\Producto;
 use App\Models\Subcategoria;
 
+use App\Models\Administrador\QuienesSomos;
+
+use App\Models\Administrador\CarruselPaginaPrincipal;
+
+use App\Models\Administrador\PorqueElegirnos;
+
+use App\Models\Administrador\Beneficio;
+
+use App\Models\Administrador\TipoDeServicio;
+
+use App\Models\Administrador\DatosEmpresa;
+use App\Models\Administrador\RedesSociales;
+use App\Models\Administrador\EnlacesConoceMas;
 
 class HomeController extends Controller
 {
    
-    private function DatosGeneralesDeLaEmpresa()
-{
-        $datos["nombre_empresa"] = "La Ruta del Sabor";
-        $datos["eslogan_empresa"] = "Siempre visible, Siempre a tiempo.";
-        $datos["logo_empresa"] = "Imagenes/La Ruta Del Sabor_Logo.ico";
-        $datos["descripcion_empresa"] = "Plataforma digital que conecta clientes 
-        con comerciantes ambulantes de comida mediante geolocalización y tecnología segura.";
-        $datos['derechos_reservados_empresa'] = [
-                'icono' => 'bi bi-c-circle',
-                'anio' => date('Y'),
-                'texto' => 'Todos los derechos reservados.'
-];
 
-        return $datos;
-}
 
-private function DatosConoceMas()
-{
-        $datos["enlace_inicio"] = [
-            "icono" => 'bi bi-house me-1',
-            "texto" => 'Inicio',
-            "url" => route('inicio')
-        ];
 
-        $datos["enlace_registro"] = [
-            "icono" => "bi-person-plus",
-            "texto" => "Registrarse",
-            "url" => route('registro')
-        ];
-
-        $datos["enlace_carrito"] = [
-            "icono" => "bi-cart",
-            "texto" => "Carrito",
-            "url" => route('carrito') 
-        ];
-
-        $datos["enlace_ayuda"] = [
-        "icono" => "bi-question-circle",
-        "texto" => "Ayuda",
-        "url" => route('ayuda')
-        ];
-
-        $datos["enlace_contacto"] = [
-        "icono" => "bi-envelope",
-        "texto" => "Contacto",
-        "url" => route('contacto')
-        ];
-        return $datos;
-}
-
-private function DatosCategorias()
-{
-    $categorias = \App\Models\Categoria::all();
-
-    return [
-        'titulo' => 'Categorías',
-        'items' => $categorias->map(function($cat){
-            return [
-                'texto' => $cat->nombre,
-                'url'   => route('productos', ['categoria' => $cat->slug]),
-                'icono' => $cat->icono ?? 'bi-tag'
-            ];
-        })->toArray() // <- importante convertir a array
-    ];
-}
-
- private function DatosMenu()
-    {
-        return \App\Models\OpcionMenu::with('subopciones')
-            ->orderBy('orden')
-            ->get();
-    }
 
 /*private function DatosNuestrosComerciantes()
 {
@@ -112,41 +56,28 @@ private function DatosAprendeAUsar()
 return $datos;     
 } */
 
-private function DatosRedesSociales()
+private function DatosCategorias()
 {
+    $categorias = \App\Models\Categoria::all();
 
-        $datos["facebook"] = [
-            "icono" => "fa-facebook",
-            "url" => "https://www.facebook.com/?locale=es_LA"
-        ];
-
-        $datos["instagram"] = [
-            "icono" => "fa-instagram",
-            "url" => "https://www.instagram.com/"
-        ];
-
-        $datos["x"] = [
-            "icono" => "fa-x-twitter",
-            "url" => "https://x.com/?lang=es"
-        ];
-
-        $datos["whatsapp"] = [
-            "icono" => "fa-whatsapp",
-            "url" => "https://www.whatsapp.com/?lang=es"
-        ];
-
-        $datos["youtube"] = [
-            "icono" => "fa-youtube",
-            "url" => "https://www.youtube.com/"
-        ];
-
-        $datos["tiktok"] = [
-            "icono" => "fa-tiktok",
-            "url" => "https://www.tiktok.com/"
-        ];
-
-        return $datos;
+    return [
+        'titulo' => 'Categorías',
+        'items' => $categorias->map(function($cat){
+            return [
+                'texto' => $cat->nombre,
+                'url'   => route('productos', ['categoria' => $cat->slug]),
+                'icono' => $cat->icono ?? 'bi-tag'
+            ];
+        })->toArray() // <- importante convertir a array
+    ];
 }
+
+ private function DatosMenu()
+    {
+        return \App\Models\OpcionMenu::with('subopciones')
+            ->orderBy('orden')
+            ->get();
+    }
 
 private function DatosBuscador()
 {
@@ -179,16 +110,62 @@ private function DatosBuscador()
 
     return ['DatosBuscador' => $datos];
 }
-    public function inicio(){
-        $datos = [];
 
-    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
-    $datos['conoceMas']    = $this->DatosConoceMas();
-    $datos['categorias']   = $this->DatosCategorias();
-    $datos['menu']         = $this->DatosMenu();
-    $datos['redes']        = $this->DatosRedesSociales();
-    $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Inicio';
+private function obtenerDestacados()
+{
+    $destacados = \App\Models\Producto::with(['subcategoria.categoria', 'imagenes'])
+        ->where('is_active', 1)
+        ->where('is_destacado', 1)
+        ->inRandomOrder()
+        ->take(4)
+        ->get();
+
+    // 🔥 SI NO HAY 4, COMPLETAR CON OTROS
+    if ($destacados->count() < 4) {
+
+        $faltantes = 4 - $destacados->count();
+
+        $extra = \App\Models\Producto::with(['subcategoria.categoria', 'imagenes'])
+            ->where('is_active', 1)
+            ->whereNotIn('id', $destacados->pluck('id'))
+            ->inRandomOrder()
+            ->take($faltantes)
+            ->get();
+
+        $destacados = $destacados->merge($extra);
+    }
+
+    return $destacados;
+}
+    public function inicio(){
+        
+$datos = [];
+
+    $this->cargarDatosBase($datos);
+
+
+$datos['menu']         = $this->DatosMenu();
+$datos['titulopagina'] = 'Inicio';
+
+
+    $datos['empresa'] = QuienesSomos::where('is_active',1)->get();
+
+    $datos['carrusel'] = CarruselPaginaPrincipal::where('is_active',1)
+        ->orderBy('orden')
+        ->get();
+
+        $datos['beneficios'] = PorqueElegirnos::where('is_active', 1)
+        ->orderBy('orden')
+        ->get();
+
+$datos['beneficios_bancarios'] = Beneficio::where('is_active', 1)
+            ->orderBy('orden')
+            ->get();
+
+            $datos['tipos_servicios'] = TipoDeServicio::where('is_active', 1)->orderBy('orden')->get();
+
+            $datos['destacados'] = $this->obtenerDestacados();
+
 
     return view('inicio', $datos);
     } 
@@ -196,13 +173,13 @@ private function DatosBuscador()
     public function Registro(){
         $datos = [];
 
-    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
-    $datos['conoceMas']    = $this->DatosConoceMas();
-    $datos['categorias']   = $this->DatosCategorias();
-    $datos['menu']         = $this->DatosMenu();
-    $datos['redes']        = $this->DatosRedesSociales();
-    $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Registro';
+    $datos = [];
+
+    $this->cargarDatosBase($datos);
+
+
+$datos['menu']         = $this->DatosMenu();
+$datos['titulopagina'] = 'Registro';
 
     return view('registro', $datos);
     } 
@@ -210,13 +187,11 @@ private function DatosBuscador()
     public function Carrito(){
         $datos = [];
 
-    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
-    $datos['conoceMas']    = $this->DatosConoceMas();
-    $datos['categorias']   = $this->DatosCategorias();
-    $datos['menu']         = $this->DatosMenu();
-    $datos['redes']        = $this->DatosRedesSociales();
-    $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Carrito';
+    $this->cargarDatosBase($datos);
+
+
+$datos['menu']         = $this->DatosMenu();
+$datos['titulopagina'] = 'Carrito';
 
     return view('carrito', $datos);
     } 
@@ -224,24 +199,81 @@ private function DatosBuscador()
     public function Ayuda(){
         $datos = [];
 
-    $datos['generales']    = $this->DatosGeneralesDeLaEmpresa();
-    $datos['conoceMas']    = $this->DatosConoceMas();
-    $datos['categorias']   = $this->DatosCategorias();
-    $datos['menu']         = $this->DatosMenu();
-    $datos['redes']        = $this->DatosRedesSociales();
-    $datos['buscador']     = $this->DatosBuscador();
-    $datos['titulopagina'] = 'Ayuda';
+    $datos = [];
+
+    $this->cargarDatosBase($datos);
+
+
+$datos['menu']         = $this->DatosMenu();
+$datos['titulopagina'] = 'Ayuda';
 
     return view('ayuda', $datos);
     } 
 
+
+
+
+
+
     private function cargarDatosBase(&$datos)
-    {
-        $datos['generales'] = $this->DatosGeneralesDeLaEmpresa();
-        $datos['conoceMas'] = $this->DatosConoceMas();
-        $datos['categorias'] = $this->DatosCategorias();
-        $datos['buscador'] = $this->DatosBuscador();
+{
+    $empresa = \App\Models\Administrador\DatosEmpresa::first();
+
+    if (!$empresa) {
+        $empresa = new \stdClass();
+        $empresa->nombre_empresa = '';
+        $empresa->eslogan_empresa = '';
+        $empresa->logo_empresa = '';
+        $empresa->descripcion_empresa = '';
+        $empresa->derechos_reservados_empresa = [
+            "icono" => "bi bi-c-circle",
+            "anio" => date('Y'),
+            "texto" => "Todos los derechos reservados."
+        ];
     }
+
+    // ✅ GENERALES (IGUAL QUE TU FORMATO ORIGINAL)
+    $datos['generales'] = [
+        "nombre_empresa" => $empresa->nombre_empresa,
+        "eslogan_empresa" => $empresa->eslogan_empresa,
+        "logo_empresa" => $empresa->logo_empresa,
+        "descripcion_empresa" => $empresa->descripcion_empresa,
+        "derechos_reservados_empresa" => $empresa->derechos_reservados_empresa
+    ];
+
+    // 🔵 CONOCE MÁS (usa "clave" como índice)
+    $datos['conoceMas'] = [];
+
+    $enlaces = \App\Models\Administrador\EnlacesConoceMas::all();
+
+    foreach ($enlaces as $item) {
+        $datos['conoceMas'][$item->clave] = [
+            "icono" => $item->icono,
+            "texto" => $item->texto,
+            "url"   => $item->url
+        ];
+    }
+
+    // 🔵 REDES (usa "clave" como índice)
+    $datos['redes'] = [];
+
+    $redes = \App\Models\Administrador\RedesSociales::all();
+
+    foreach ($redes as $item) {
+        $datos['redes'][$item->clave] = [
+            "icono" => $item->icono,
+            "url"   => $item->url
+        ];
+    }
+    
+    $datos['categorias'] = $this->DatosCategorias();
+
+    $datos['buscador'] = $this->DatosBuscador();
+}
+
+
+
+
 
     private function cargarProductos($categoria_slug, Request $request)
     {

@@ -70,10 +70,13 @@
     </small>
 
     <!-- 💲 precio -->
-    <div class="text-center fw-bold mb-2 text-success">
+<div class="text-center mb-2">
+    <span class="fw-bold text-success d-inline-flex align-items-center justify-content-center gap-1"
+          style="font-size: 1.7rem;">
+        <i class="bi bi-currency-dollar"></i>
         {{ $precio }}
-    </div>
-
+    </span>
+</div>
     <!-- 📄 descripción -->
     <p class="small text-muted text-center mb-2 px-2"
        style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">

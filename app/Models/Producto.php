@@ -10,7 +10,7 @@ class Producto extends Model
 
     protected $fillable = [
         'nombre', 'slug', 'descripcion', 'precio', 'rating', 
-        'icono', 'subcategoria_id'
+        'icono', 'subcategoria_id', 'is_destacado' 
     ];
 
     // Relaciones

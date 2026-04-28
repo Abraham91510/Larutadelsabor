@@ -21,7 +21,7 @@ class SessionTimeout
 
             if ($inactive > 600) {
                 session()->flush();
-                return redirect('/login')->with('error', 'Sesión expirada');
+                return redirect('/login/admin')->with('error', 'Sesión expirada');
             }
         }
 

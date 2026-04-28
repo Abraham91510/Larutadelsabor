@@ -14,9 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         //
 
         $middleware->alias([
-        'auth.admin' => \App\Http\Middleware\Administrador\AuthAdmin::class,
-        'session.timeout' => \App\Http\Middleware\Administrador\SessionTimeout::class,
-    ]);
+    'auth.admin' => \App\Http\Middleware\Administrador\AuthAdmin::class,
+    'session.timeout' => \App\Http\Middleware\Administrador\SessionTimeout::class,
+    'role' => \App\Http\Middleware\Administrador\RoleMiddleware::class,
+]);
 
 
     

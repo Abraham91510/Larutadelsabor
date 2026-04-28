@@ -11,6 +11,7 @@ class OpcionMenu extends Model
     protected $fillable = [
         'nombre',
         'slug',
+        'url',
         'orden'
     ];
 
