@@ -269,48 +269,56 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdn.datatables.net/2.3.7/js/dataTables.js"></script>
 
-
 <script>
 $(document).ready(function(){
     $('#tablaProductos').DataTable();
 });
 
-// --- LÓGICA COLONIAS ---
+// ================= COLONIAS =================
 let arrayColonias = []; 
+
 function renderizarColonias() {
     $('#listaColoniasSeleccionadas').html('');
     $('#coloniasCombo option').show();
+
     arrayColonias.forEach(id => {
         let texto = $(`#opt-col-${id}`).text();
+
         $('#listaColoniasSeleccionadas').append(`
             <span class="badge bg-primary badge-colonia">
                 ${texto}
                 <span class="btn-remove-col" onclick="quitarColonia(${id})">X</span>
             </span>
         `);
+
         $(`#opt-col-${id}`).hide();
     });
+
     $('#coloniasCombo').val('');
 }
+
 $('#coloniasCombo').on('change', function() {
     let val = $(this).val();
+
     if(val && !arrayColonias.includes(parseInt(val))) {
         arrayColonias.push(parseInt(val));
         renderizarColonias();
     }
 });
+
 function quitarColonia(id) {
     arrayColonias = arrayColonias.filter(item => item !== id);
     renderizarColonias();
 }
 
-// --- LÓGICA IMÁGENES ---
+// ================= IMÁGENES =================
 let imagenesEliminadas = []; 
 let dt = new DataTransfer(); 
 
 function cargarImagenesExistentes(imagenes) {
     $('#preview').html('');
-    imagenesEliminadas = []; 
+    imagenesEliminadas = [];
+
     imagenes.forEach(img => {
         $('#preview').append(`
             <div class="image-preview-container existente" id="img-existente-${img.id}">
@@ -327,17 +335,20 @@ function removerImagenExistente(id) {
 }
 
 $('#imagenes').on('change', function(e) {
-    for (let file of e.target.files) { 
-        dt.items.add(file); 
+    for (let file of e.target.files) {
+        dt.items.add(file);
     }
+
     this.files = dt.files;
     renderizarPreviewNuevas();
 });
 
 function renderizarPreviewNuevas() {
     $('.image-preview-container.nueva').remove();
+
     for (let i = 0; i < dt.files.length; i++) {
         const reader = new FileReader();
+
         reader.onload = function(e) {
             $('#preview').append(`
                 <div class="image-preview-container nueva">
@@ -346,6 +357,7 @@ function renderizarPreviewNuevas() {
                 </div>
             `);
         }
+
         reader.readAsDataURL(dt.files[i]);
     }
 }
@@ -356,17 +368,18 @@ function removerImagenNueva(index) {
     renderizarPreviewNuevas();
 }
 
-// --- ACCIONES MODAL ---
+// ================= EDITAR =================
 $(document).on('click','.btnEditar',function(){
+
     $('#formProducto')[0].reset();
-    dt = new DataTransfer(); 
+    dt = new DataTransfer();
+
     $('#id').val($(this).data('id'));
     $('#nombre').val($(this).data('nombre'));
     $('#precio').val($(this).data('precio'));
     $('#rating').val($(this).data('rating'));
     $('#icono').val($(this).data('icono'));
 
-    // ✅ AGREGA ESTA LÍNEA
     $('#is_destacado').prop('checked', $(this).data('destacado') == 1);
 
     arrayColonias = $(this).data('colonias') || [];
@@ -374,25 +387,24 @@ $(document).on('click','.btnEditar',function(){
 
     $('#descripcion').val($(this).data('descripcion'));
 
-let categoria = $(this).data('categoria');
-let subcategoria = $(this).data('subcategoria');
+    let categoria = $(this).data('categoria');
+    let subcategoria = $(this).data('subcategoria');
 
-$('#categoria').val(categoria);
+    $('#categoria').val(categoria);
 
-// Cargar subcategorías y luego seleccionar la correcta
-fetch('/subcategorias/' + categoria)
-.then(res => res.json())
-.then(data => {
+    fetch('/subcategorias/' + categoria)
+    .then(res => res.json())
+    .then(data => {
 
-    let html = '<option value="">-- Selecciona subcategoría --</option>';
+        let html = '<option value="">-- Selecciona subcategoría --</option>';
 
-    data.forEach(sub => {
-        let selected = sub.id == subcategoria ? 'selected' : '';
-        html += `<option value="${sub.id}" ${selected}>${sub.nombre}</option>`;
+        data.forEach(sub => {
+            let selected = sub.id == subcategoria ? 'selected' : '';
+            html += `<option value="${sub.id}" ${selected}>${sub.nombre}</option>`;
+        });
+
+        $('#subcategoria').html(html);
     });
-
-    $('#subcategoria').html(html);
-});
 
     let imagenes = $(this).data('imagenes') || [];
     cargarImagenesExistentes(imagenes);
@@ -400,16 +412,19 @@ fetch('/subcategorias/' + categoria)
     $('#modalProducto').modal('show');
 });
 
+// ================= NUEVO =================
 function abrirModalNuevo(){
     $('#formProducto')[0].reset();
     dt = new DataTransfer();
+
     $('#id').val('');
     $('#preview').html('');
+
     arrayColonias = [];
     imagenesEliminadas = [];
+
     renderizarColonias();
 
-    // ✅ AGREGA ESTA LÍNEA
     $('#is_destacado').prop('checked', false);
 
     $('#subcategoria').html('<option value="">-- Selecciona subcategoría --</option>');
@@ -417,31 +432,24 @@ function abrirModalNuevo(){
     $('#modalProducto').modal('show');
 }
 
-// --- GUARDAR ---
+// ================= GUARDAR =================
 $('#formProducto').on('submit', function(e){
     e.preventDefault();
 
-    // limpiar espacios
+    let id = $('#id').val();
+
     let nombre = $('#nombre').val().trim();
     let precio = $('#precio').val();
     let rating = parseFloat($('#rating').val());
     let icono = $('#icono').val().trim();
     let descripcion = $('#descripcion').val().trim();
     let subcategoria = $('#subcategoria').val();
-
-    // ✅ 1. AGREGA ESTA VARIABLE
     let is_destacado = $('#is_destacado').is(':checked') ? 1 : 0;
 
-    // VALIDACIONES
-    if (!nombre.trim() ||
-    !precio ||
-    !icono.trim() ||
-    !descripcion.trim() ||
-    !subcategoria) {
-
-    alert('Todos los campos son obligatorios');
-    return;
-}
+    if (!nombre || !precio || !icono || !descripcion || !subcategoria) {
+        alert('Todos los campos son obligatorios');
+        return;
+    }
 
     if (isNaN(rating) || rating < 1 || rating > 5) {
         alert('El rating debe estar entre 1 y 5');
@@ -452,21 +460,17 @@ $('#formProducto').on('submit', function(e){
         alert('Debes seleccionar al menos una colonia');
         return;
     }
-let id = $('#id').val();
-    // VALIDAR IMÁGENES
-// Crear
-if (!id && dt.files.length === 0) {
-    alert('Debes subir al menos una imagen');
-    return;
-}
 
-// Editar (evitar dejar sin imágenes)
-if (id && dt.files.length === 0 && $('.image-preview-container.existente').length === 0) {
-    alert('El producto debe tener al menos una imagen');
-    return;
-}
+    if (!id && dt.files.length === 0) {
+        alert('Debes subir al menos una imagen');
+        return;
+    }
 
-    
+    if (id && dt.files.length === 0 && $('.image-preview-container.existente').length === 0) {
+        alert('Debe haber al menos una imagen');
+        return;
+    }
+
     let formData = new FormData();
 
     formData.append('_token','{{ csrf_token() }}');
@@ -480,40 +484,57 @@ if (id && dt.files.length === 0 && $('.image-preview-container.existente').lengt
 
     arrayColonias.forEach(c => formData.append('colonias[]', c));
 
-    for(let i=0; i < dt.files.length; i++){ 
-        formData.append('imagenes[]', dt.files[i]); 
+    for(let i=0; i < dt.files.length; i++){
+        formData.append('imagenes[]', dt.files[i]);
     }
 
-    if(id) {
+    if(id){
         formData.append('_method','PUT');
         imagenesEliminadas.forEach(imgId => {
             formData.append('imagenes_eliminadas[]', imgId);
         });
     }
 
-    let url = id ? '/productos/' + id : '/productos/store';
+    let url = id 
+        ? '/dashboard/productos/' + id 
+        : '/dashboard/productos/store';
 
     fetch(url, {
-    method: 'POST',
-    body: formData,
-    headers: {
-        'Accept': 'application/json'
-    }
-})
-    .then(r=>r.json())
-    .then(()=>location.reload());
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(r => r.json())
+    .then(() => location.reload());
 });
 
-function toggleEstado(id){ fetch('/productos-toggle/' + id).then(()=>location.reload()); }
+// ================= ESTADO =================
+function toggleEstado(id){
+    fetch('/dashboard/productos/toggle/' + id)
+    .then(()=>location.reload());
+}
+
+// ================= DESTACADO =================
+function toggleDestacado(id){
+    fetch('/dashboard/productos/destacado/' + id)
+    .then(()=>location.reload());
+}
+
+// ================= ELIMINAR =================
 function eliminar(id){
     if(confirm('¿Seguro que deseas eliminar este producto?')){
-        fetch('/productos/' + id,{ 
-            method:'DELETE', 
-            headers:{'X-CSRF-TOKEN':'{{ csrf_token() }}'} 
+        fetch('/dashboard/productos/' + id,{
+            method:'DELETE',
+            headers:{
+                'X-CSRF-TOKEN':'{{ csrf_token() }}'
+            }
         }).then(()=>location.reload());
     }
 }
 
+// ================= SUBCATEGORÍAS =================
 $('#categoria').on('change', function(){
 
     let slug = $(this).val();
