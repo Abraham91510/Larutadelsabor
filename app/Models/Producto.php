@@ -74,4 +74,28 @@ class Producto extends Model
 
         return $query;
     }
+
+//NUEVA INFORMACIÓN 03 DE MAYO DEL 2026
+
+
+public function caracteristicas()
+{
+    return $this->hasMany(\App\Models\ProductoCaracteristica::class);
 }
+
+public function detalles()
+{
+    return $this->hasOne(\App\Models\ProductoDetalle::class);
+}
+
+public function stock()
+{
+    return $this->hasOne(\App\Models\ProductoStock::class);
+}
+
+
+
+
+}
+
+

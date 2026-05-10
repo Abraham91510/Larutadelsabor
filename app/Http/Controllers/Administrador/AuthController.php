@@ -105,6 +105,22 @@ public function saveRegister(Request $request)
     // 🟢 LOGIN
     public function loginPost(Request $request)
     {
+
+  
+
+$request->validate(['captcha' => 'required'], ['captcha.required' => 'Debes ingresar el captcha.']);
+
+    $captchaUser = trim(strtoupper($request->captcha));
+    $captchaSession = session('captcha_code'); // Ya está en mayúsculas desde el controlador
+
+    // IMPORTANTE: Borrarlo apenas se lee para que no sea reutilizable
+    session()->forget('captcha_code');
+
+    if (!$captchaSession || $captchaUser !== $captchaSession) {
+        return back()->with('error', 'Captcha incorrecto.')->withInput();
+    }
+
+
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -120,8 +136,16 @@ public function saveRegister(Request $request)
             'last_activity' => time()
         ]);
 
+
+
+
+        
+
         return redirect('/dashboard')
             ->with('success', 'Bienvenido ' . $user->name);
+
+
+
     }
 
     // 🟢 LOGOUT
@@ -131,4 +155,6 @@ public function saveRegister(Request $request)
         session()->flush();
         return redirect('/login/admin');
     }
+
+    
 }

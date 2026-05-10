@@ -349,57 +349,43 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function () {
 
     const categoriaSelect = document.getElementById('categoria');
     const subcategoriaSelect = document.getElementById('subcategoria');
 
-    // evitar errores si no existe
-    if(!categoriaSelect || !subcategoriaSelect){
-        return;
-    }
+    if (!categoriaSelect || !subcategoriaSelect) return;
 
-    categoriaSelect.addEventListener('change', function(){
+    categoriaSelect.addEventListener('change', function () {
 
-        let categoria = this.value;
+        const categoria = this.value;
 
         subcategoriaSelect.innerHTML = '<option value="">Cargando...</option>';
 
-        if(categoria === ""){
-            subcategoriaSelect.innerHTML = '<option value="">Todas</option>';
-            return;
-        }
+        fetch(`/plataforma/subcategorias/${categoria}`)
+            .then(res => res.json())
+            .then(data => {
 
-        fetch(`/subcategorias/${categoria}`)
-        .then(response => {
-            if(!response.ok){
-                throw new Error("Error en servidor");
-            }
-            return response.json();
-        })
-        .then(data => {
+                subcategoriaSelect.innerHTML = '<option value="">Todas</option>';
 
-            subcategoriaSelect.innerHTML = '<option value="">Todas</option>';
+                data.forEach(sub => {
+                    subcategoriaSelect.innerHTML += `
+                        <option value="${sub.id}">${sub.nombre}</option>
+                    `;
+                });
 
-            if(data.length === 0){
-                subcategoriaSelect.innerHTML += '<option value="">Sin resultados</option>';
-            }
-
-            data.forEach(sub => {
-                subcategoriaSelect.innerHTML += `
-                    <option value="${sub.id}">${sub.nombre}</option>
-                `;
+                // 👇 IMPORTANTE: NO recargar página
+                // solo actualizas opciones
+            })
+            .catch(err => {
+                console.error(err);
+                subcategoriaSelect.innerHTML = '<option value="">Error</option>';
             });
-
-        })
-        .catch(error => {
-            console.error(error);
-            subcategoriaSelect.innerHTML = '<option value="">Error al cargar</option>';
-        });
 
     });
 
 });
+
 </script>
 
 <script>
@@ -441,6 +427,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
 });
 </script>
+
+
 @stack('js')
 </body>
 </html>

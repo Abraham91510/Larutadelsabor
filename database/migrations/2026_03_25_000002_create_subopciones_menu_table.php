@@ -26,13 +26,17 @@ return new class extends Migration
 
             $table->integer('orden')->default(0);
 
+            // 👇 NUEVO
+            $table->string('roles')
+                ->default('cliente,comerciante');
+
             $table->timestamps();
 
-            // Relación
+            // RELACIÓN
             $table->foreign('opcion_id')
-                  ->references('id')
-                  ->on('opciones_menu')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('opciones_menu')
+                ->onDelete('cascade');
 
         });
     }

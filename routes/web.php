@@ -8,7 +8,24 @@ use App\Http\Controllers\NuestrosComerciantesController;
 use App\Http\Controllers\AprendeAUsarController;
 use App\Http\Controllers\PrincipalController;
 
-use App\Http\Controllers\Administrador\AuthController;
+
+
+use App\Http\Controllers\CarritoController;
+
+
+
+
+use App\Http\Controllers\Usuario\AuthController as UsuarioAuthController;
+
+use App\Http\Controllers\Administrador\AuthController as AdminAuthController;
+
+use App\Http\Controllers\Usuario\CaptchaController as UsuarioCaptchaController;
+
+use App\Http\Controllers\Administrador\CaptchaController as AdminCaptchaController;
+
+
+
+
 use App\Http\Controllers\Administrador\DashboardController;
 
 use App\Http\Controllers\ComentarioController;
@@ -26,7 +43,44 @@ use App\Http\Controllers\Administrador\BeneficioController;
 use App\Http\Controllers\Administrador\TipoDeServicioController;
 
 
-// Ruta principal
+
+/*
+|--------------------------------------------------------------------------
+| 👤 LOGIN / REGISTRO USUARIO (FUERA DE PLATAFORMA)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/login/usuario', [UsuarioAuthController::class, 'login'])
+    ->name('usuario.login');
+
+Route::post('/login/usuario', [UsuarioAuthController::class, 'loginPost']);
+
+Route::get('/registrar/usuario', [UsuarioAuthController::class, 'register'])
+    ->name('usuario.registro');
+
+Route::post('/registrar/usuario', [UsuarioAuthController::class, 'saveRegister']);
+
+Route::get('/captcha-simple/usuario', [UsuarioCaptchaController::class, 'generate'])
+    ->name('usuario.captcha.simple');
+
+Route::get('/quienes-somos/usuario', [QuienesSomosController::class, 'publico'])
+    ->name('usuario.quienes_somos');
+
+
+/*
+|--------------------------------------------------------------------------
+| 👥 PLATAFORMA (CLIENTE + COMERCIANTE)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    'auth.usuario',
+    'session.timeout.usuario'
+])
+->prefix('plataforma')
+->group(function () {
+
+   // Ruta principal
 Route::get('/', function () {
     return view('welcome');
 });
@@ -48,26 +102,65 @@ Route::get('/clientes', [AprendeAUsarController::class, 'Clientes'])->name('clie
 Route::get('/comerciantes', [AprendeAUsarController::class, 'Comerciantes'])->name('comerciantes');
 Route::get('/pagos', [AprendeAUsarController::class, 'Pagos'])->name('pagos');
 
-// Ruta de Producto individual
-Route::get('/producto/{slug}', function($slug) {
-    return "Producto: " . $slug;
-})->name('producto');
+// PRODUCTO DETALLE
+Route::get('/producto/{slug}', [CategoriaController::class, 'show'])
+    ->name('producto');
+
+// CARRITO
+Route::get('/carrito', [CarritoController::class, 'index'])
+    ->name('carrito');
+
+Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])
+    ->name('carrito.agregar');
+
+Route::post('/carrito/actualizar', [CarritoController::class, 'actualizar'])
+    ->name('carrito.actualizar');
+
+Route::post('/carrito/sumar/{id}', [CarritoController::class, 'sumar'])
+    ->name('carrito.sumar');
+
+Route::post('/carrito/restar/{id}', [CarritoController::class, 'restar'])
+    ->name('carrito.restar');
+
+Route::post('/carrito/eliminar/{id}', [CarritoController::class, 'eliminar'])
+    ->name('carrito.eliminar');
 
 Route::get('/productos/{categoria?}', [CategoriaController::class, 'Productos'])->name('productos');
 
 Route::get('/subcategorias/{categoria}', [CategoriaController::class, 'SubcategoriasAjax']);
 
+    /*
+    |--------------------------------------------------------------------------
+    | 💬 SOLO CLIENTE
+    |--------------------------------------------------------------------------
+    */
 
-Route::get('/login/admin', [AuthController::class, 'login'])->name('login');
-Route::post('/login/admin', [AuthController::class, 'loginPost']);
+    Route::middleware('role.usuario:cliente')->group(function () {
 
-Route::get('/registrar/admin', [AuthController::class, 'register']);
-Route::post('/registrar/admin', [AuthController::class, 'saveRegister']);
+       Route::get('/comentarios', [ComentarioController::class, 'index'])->name('comentarios');
+Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+
+
+    });
+
+});
+
+
+Route::get('/login/admin', [AdminAuthController::class, 'login'])->name('login');
+
+Route::post('/login/admin', [AdminAuthController::class, 'loginPost']);
+
+Route::get('/registrar/admin', [AdminAuthController::class, 'register']);
+
+Route::post('/registrar/admin', [AdminAuthController::class, 'saveRegister']);
+
+Route::get('/captcha-simple', [AdminCaptchaController::class, 'generate'])
+    ->name('captcha.simple');
+
 
 Route::get('/quienes-somos', [QuienesSomosController::class, 'publico']);
 
-Route::get('/comentarios', [ComentarioController::class, 'index'])->name('comentarios');
-Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+
 
 
 /*
@@ -77,8 +170,8 @@ Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comen
 */
 
 Route::middleware([
-    \App\Http\Middleware\Administrador\AuthAdmin::class,
-    'session.timeout'
+    'auth.admin',
+    'session.timeout.admin'
 ])
 ->prefix('dashboard')
 ->group(function () {
@@ -87,7 +180,7 @@ Route::middleware([
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // 🚪 LOGOUT
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 
     /*
     |--------------------------------------------------------------------------
@@ -100,7 +193,7 @@ Route::middleware([
         Route::get('/', [QuienesSomosController::class, 'index']); // Invitado ve la lista
         
         // Solo Admin guarda, edita o borra
-        Route::middleware('role:admin')->group(function() {
+        Route::middleware('role.admin:admin')->group(function() {
             Route::post('/store', [QuienesSomosController::class, 'store']);
             Route::put('/{id}', [QuienesSomosController::class, 'update']);
             Route::get('/toggle/{id}', [QuienesSomosController::class, 'toggle']);
@@ -113,7 +206,7 @@ Route::middleware([
         Route::get('/', [ProductoController::class, 'index']); // Invitado ve la lista
         Route::get('/create', [ProductoController::class, 'create']); // Invitado puede ver el form si quieres
 
-        Route::middleware('role:admin')->group(function() {
+        Route::middleware('role.admin:admin')->group(function() {
             Route::post('/store', [ProductoController::class, 'store']);
             Route::put('/{id}', [ProductoController::class, 'update']);
             Route::delete('/{id}', [ProductoController::class, 'destroy']);
@@ -126,7 +219,7 @@ Route::middleware([
     Route::prefix('carrusel')->group(function () {
         Route::get('/', [CarruselPaginaPrincipalController::class, 'index']);
         
-        Route::middleware('role:admin')->group(function() {
+        Route::middleware('role.admin:admin')->group(function() {
             Route::post('/store', [CarruselPaginaPrincipalController::class, 'store']);
             Route::put('/{id}', [CarruselPaginaPrincipalController::class, 'update']);
             Route::get('/toggle/{id}', [CarruselPaginaPrincipalController::class, 'toggle']);
@@ -138,7 +231,7 @@ Route::middleware([
     Route::prefix('beneficios')->group(function () {
         Route::get('/', [BeneficioController::class, 'index']);
 
-        Route::middleware('role:admin')->group(function() {
+        Route::middleware('role.admin:admin')->group(function() {
             Route::post('/store', [BeneficioController::class, 'store']);
             Route::put('/{id}', [BeneficioController::class, 'update']);
             Route::get('/toggle/{id}', [BeneficioController::class, 'toggle']);
@@ -149,8 +242,8 @@ Route::middleware([
     // ⭐ PORQUE ELEGIRNOS Y SERVICIOS (Siguen el mismo patrón)
     Route::prefix('porque-elegirnos')->group(function () {
         Route::get('/', [PorqueElegirnosController::class, 'index']);
-        Route::middleware('role:admin')->post('/store', [PorqueElegirnosController::class, 'store']);
-        // ... repites middleware('role:admin') para put, toggle y delete
+        Route::middleware('role.admin:admin')->post('/store', [PorqueElegirnosController::class, 'store']);
+        // ... repites middleware('role.admin:admin') para put, toggle y delete
     });
 
     
@@ -160,7 +253,7 @@ Route::middleware([
 
         Route::get('/admin', [TipoDeServicioController::class, 'index']);
 
-        Route::middleware('role:admin')->group(function () {
+        Route::middleware('role.admin:admin')->group(function () {
             Route::post('/store', [TipoDeServicioController::class, 'store']);
             Route::put('/{id}', [TipoDeServicioController::class, 'update']);
             Route::get('/toggle/{id}', [TipoDeServicioController::class, 'toggle']);

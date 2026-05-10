@@ -1,5 +1,10 @@
 @props(['menu' => [], 'categorias' => []])
 
+@php
+    $tipo = session('tipo_usuario'); // cliente o comerciante
+@endphp
+
+
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
 
@@ -70,54 +75,93 @@
                     </ul>
                 </li>
 
-                {{-- MENÚ DINÁMICO DESDE BD --}}
-                @foreach($menu as $opcion)
-                    @if(!in_array($opcion->slug, ['categorias', 'inicio']))
-                        @if($opcion->subopciones->count() > 0)
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                    {{ $opcion->nombre }}
+               {{-- MENÚ DINÁMICO DESDE BD --}}
+@foreach($menu as $opcion)
+
+    @php
+        $roles = explode(',', $opcion->roles);
+    @endphp
+
+    @if(in_array($tipo, $roles))
+
+        @if($opcion->subopciones->count() > 0)
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                    {{ $opcion->nombre }}
+                </a>
+
+                <ul class="dropdown-menu">
+
+                    @foreach($opcion->subopciones as $sub)
+
+                        @php
+                            $rolesSub = explode(',', $sub->roles);
+                        @endphp
+
+                        @if(in_array($tipo, $rolesSub))
+
+                            <li>
+                                <a class="dropdown-item" href="{{ $sub->url ?? '#' }}">
+                                    <i class="bi {{ $sub->icono ?? 'bi-tag' }} me-2"></i>
+                                    {{ $sub->nombre }}
                                 </a>
-                                <ul class="dropdown-menu">
-                                    @foreach($opcion->subopciones as $sub)
-                                        <li>
-                                            <a class="dropdown-item" href="{{ $sub->url ?? '#' }}">
-                                                <i class="bi {{ $sub->icono ?? 'bi-tag' }} me-2"></i>
-                                                {{ $sub->nombre }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
                             </li>
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ $opcion->url ?? '#' }}">
-                                    {{ $opcion->nombre }}
-                                </a>
-                            </li>
+
                         @endif
-                    @endif
-                @endforeach
+
+                    @endforeach
+
+                </ul>
+            </li>
+
+        @else
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ $opcion->url ?? '#' }}">
+                    {{ $opcion->nombre }}
+                </a>
+            </li>
+
+        @endif
+
+    @endif
+
+@endforeach
 
             </ul>
 
             {{-- BOTONES --}}
             <div class="d-flex gap-3 align-items-center">
-                {!! $slot_acciones ?? '
+               @if(isset($slot_acciones))
+                    {!! $slot_acciones !!}
+                @else
+
                     <a href="#" class="btn btn-outline-dark rounded-pill">
-        <i class="bi bi-person-circle me-1"></i>
-        Iniciar sesión
-    </a>
-                    
+                        <i class="bi bi-person-circle me-1"></i>
+                        Iniciar sesión
+                    </a>
+
                     <a href="#" class="btn btn-success rounded-pill">
                         <i class="bi bi-person-plus"></i> Registro
                     </a> 
-                    <a href="#" class="btn btn-warning rounded-pill">
+
+                    <a href="{{ route('carrito') }}" class="btn btn-warning rounded-pill">
                         <i class="bi bi-cart"></i> Carrito
                     </a>
-                ' !!}
+
+                @endif
+
             </div>
 
         </div>
     </div>
 </nav>
+
+
+
+
+
+
+
+        

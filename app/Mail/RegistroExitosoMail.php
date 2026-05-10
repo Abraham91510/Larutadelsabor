@@ -12,14 +12,18 @@ class RegistroExitosoMail extends Mailable
 
     public $user;
     public $generales;
+    public $tipo;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $generales)
+    public function __construct($user, $generales, $tipo = 'usuario')
     {
         $this->user = $user;
+
         $this->generales = $generales;
+
+        $this->tipo = $tipo;
     }
 
     /**
@@ -37,8 +41,28 @@ class RegistroExitosoMail extends Mailable
      */
     public function content(): \Illuminate\Mail\Mailables\Content
     {
+
+        /*
+        |--------------------------------------------------------------------------
+        | ADMINISTRADOR
+        |--------------------------------------------------------------------------
+        */
+
+        if ($this->tipo == "admin") {
+
+            return new \Illuminate\Mail\Mailables\Content(
+                view: 'administrador.emails.registro_exitoso'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CLIENTE / COMERCIANTE
+        |--------------------------------------------------------------------------
+        */
+
         return new \Illuminate\Mail\Mailables\Content(
-            view: 'administrador.emails.registro_exitoso'
+            view: 'usuario.emails.registro_exitoso'
         );
     }
 

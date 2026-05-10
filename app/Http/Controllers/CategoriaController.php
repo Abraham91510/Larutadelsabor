@@ -51,11 +51,31 @@ class CategoriaController extends Controller
 }
 
  private function DatosMenu()
-    {
-        return \App\Models\OpcionMenu::with('subopciones')
-            ->orderBy('orden')
-            ->get();
+{
+    $tipoUsuario = session('tipo_usuario');
+
+    $query = \App\Models\OpcionMenu::with(['subopciones' => function ($q) use ($tipoUsuario) {
+
+        // Si es comerciante ocultar opciones exclusivas cliente
+        if ($tipoUsuario === 'comerciante') {
+
+            $q->whereNotIn('url', [
+                '/clientes',
+                '/comentarios'
+            ]);
+        }
+
+    }]);
+
+    // Ocultar menú comentarios al comerciante
+    if ($tipoUsuario === 'comerciante') {
+
+        $query->where('slug', '!=', 'aprende')
+              ->where('slug', '!=', 'comentarios');
     }
+
+    return $query->orderBy('orden')->get();
+}
 
 /*private function DatosNuestrosComerciantes()
 {
@@ -128,14 +148,19 @@ private function DatosRedesSociales()
 
     private function cargarProductos(Request $request)
     {
-        $categoria_slug = $request->categoria ?? null;
+       $categoria_slug = $request->categoria ?? $request->route('categoria');
+        $subcategoria   = $request->filled('subcategoria') ? $request->subcategoria : null;
+    $precio_min     = $request->filled('precio_min') ? $request->precio_min : null;
+    $precio_max     = $request->filled('precio_max') ? $request->precio_max : null;
+    $rating         = $request->filled('rating') ? $request->rating : null;
+    $cp             = $request->filled('cp') ? $request->cp : null;
+
 
         // Subcategorías según la categoría seleccionada
         $subcategoriaModel = new Subcategoria();
         $subcategorias = $categoria_slug
-            ? $subcategoriaModel->ObtenerPorCategoria($categoria_slug)
-            : collect(); // vacío si no hay categoría
-
+    ? $subcategoriaModel->ObtenerPorCategoria($categoria_slug) ?? collect()
+    : collect();
         // Productos filtrados
         $productoModel = new Producto();
         $productos = $productoModel->ObtenerProductosFiltrados(
@@ -145,19 +170,19 @@ private function DatosRedesSociales()
             $request->precio_max,
             $request->rating,
             $request->cp
-        )->paginate(12);
+        )->paginate(12)->appends($request->query());
 
         // Precios min y max reales
         $precio_min = Producto::min('precio');
         $precio_max = Producto::max('precio');
 
-        return [
-            "subcategorias" => $subcategorias,
-            "productos" => $productos,
-            "precio_min" => $precio_min,
-            "precio_max" => $precio_max,
-            "categoria_selected" => $categoria_slug
-        ];
+       return [
+    "subcategorias" => $subcategorias,
+    "productos" => $productos,
+    "precio_min" => $precio_min,
+    "precio_max" => $precio_max,
+    "categoria_selected" => $categoria_slug// <--- Agrega esto
+];
     }
 
 private function DatosBuscador()
@@ -203,17 +228,19 @@ public function Productos(Request $request)
     $datos["productos"] = $filtro["productos"];
     $datos["precio_min"] = $filtro["precio_min"];
     $datos["precio_max"] = $filtro["precio_max"];
-    $datos["categoria_selected"] = $filtro["categoria_selected"];
-    $datos["titulopagina"] = $filtro["categoria_selected"]
-        ? ucfirst($filtro["categoria_selected"])
-        : "Todos los productos";
+    
+    $datos["categoria_actual"] = $filtro['categoria_selected'];
 
-    $datos["buscador"] = $this->DatosBuscador();
+$datos["titulopagina"] = $datos["categoria_actual"]
+        ? ucfirst(str_replace('_', ' ', $datos["categoria_actual"])) 
+        : "Todos los productos";
     
 
     // Agregar los datos faltantes para menú y footer
     $datos['menu']         = $this->DatosMenu();
     $datos['redes']        = $this->DatosRedesSociales();
+
+    $datos["request"] = $request->all();
     
 
     return view("productos", $datos);
@@ -228,6 +255,32 @@ public function SubcategoriasAjax($categoria_slug)
     return response()->json($subcategorias);
 }
 
+// NUEVA INFORMACIÓN EL 03 D EMAYO DEL 2025
 
+public function show($slug)
+{
+    $datos = [];
+
+    // 🔹 Datos base
+    $this->cargarDatosBase($datos);
+    $datos['menu']  = $this->DatosMenu();
+    $datos['redes'] = $this->DatosRedesSociales();
+
+    // 🔹 Producto con TODAS las relaciones
+    $producto = \App\Models\Producto::with([
+        'imagenes',
+        'subcategoria.categoria',
+        'caracteristicas',
+        'detalles',
+        'stock',
+        'colonias' // 🔥 IMPORTANTE (te faltaba en el segundo)
+    ])->where('slug', $slug)->firstOrFail();
+
+    // 🔹 Enviar datos a la vista
+    $datos['producto'] = $producto;
+    $datos['titulopagina'] = $producto->nombre;
+
+    return view('productos_detalle', $datos);
+}
 
 }

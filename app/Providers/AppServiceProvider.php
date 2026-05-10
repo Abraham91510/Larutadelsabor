@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Pagination\Paginator;
 
 use App\Models\Administrador\OpcionDashboard;
 use App\Models\Administrador\DatosEmpresa;
@@ -63,7 +64,11 @@ class AppServiceProvider extends ServiceProvider
             /* =========================
                DATOS EMPRESA
             ========================= */
-            $generales = DatosEmpresa::first();
+            $generales = DatosEmpresa::first() ?? (object)[
+    'nombre_empresa' => 'La Ruta del Sabor',
+    'eslogan_empresa' => 'Siempre visible, Siempre a tiempo.',
+    'logo_empresa' => 'Imagenes/La Ruta Del Sabor_Logo.ico'
+];
 
             /* =========================
                COMPARTIR VISTAS
@@ -74,6 +79,23 @@ class AppServiceProvider extends ServiceProvider
                 'user' => $user,
                 'generales' => $generales
             ]);
+
+
+/* =========================
+   NUEVO:
+   CLIENTE Y COMERCIANTE
+========================= */
+View::share(
+    'tipoUsuario',
+    session('tipo_usuario')
+);
+
+
+
+
         });
+
+
+         Paginator::useBootstrap();
     }
 }

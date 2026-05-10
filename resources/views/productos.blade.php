@@ -30,23 +30,9 @@
         color: #FFC107;
     }
 
-    .pagination {
-        margin: 0;
-        font-size: 0.875rem; /* tamaño pequeño */
-    }
+    
 
-    .pagination li a,
-    .pagination li span {
-        padding: 0.25rem 0.5rem;
-        min-width: 32px;
-        text-align: center;
-    }
-
-    .pagination li.active a {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-        color: white;
-    }
+    
 </style>
 @endpush
 
@@ -71,12 +57,12 @@
                     </h5>
 
                     <!-- Componente Filtro -->
-                    <x-filtro 
-                        :subcategorias="$subcategorias"
-                        :categoria_selected="$categoria_selected ?? null"
-                        :precio_min="$precio_min"
-                        :precio_max="$precio_max"
-                    />
+                  <x-filtro 
+    :subcategorias="$subcategorias"
+    :precio_min="$precio_min"
+    :precio_max="$precio_max"
+    :categoria_actual="$categoria_actual" 
+/>
                 </div>
             </div>
         </div>
@@ -84,7 +70,7 @@
         <!-- PRODUCTOS -->
         <div class="col-md-9">
             @if($productos->count() > 0)
-                <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="row row-cols-1 row-cols-md-3 g-3">
     @foreach($productos as $producto)
         <x-card-producto
             :imagenes="$producto->imagenes->pluck('imagen')->toArray()"
@@ -101,33 +87,11 @@
     @endforeach
 </div>
 
-                <!-- PAGINADO SIMPLE -->
-                @if($productos->lastPage() > 1)
-                    <div class="mt-4 d-flex justify-content-center">
-                        <nav>
-                            <ul class="pagination pagination-sm mb-0">
-                                <!-- Página anterior -->
-                                <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-    <a class="page-link" href="{{ $productos->appends(request()->query())->previousPageUrl() }}" aria-label="Anterior">&laquo;</a>
-</li>
-
-                                <!-- Números de página -->
-                                @for ($i = 1; $i <= $productos->lastPage(); $i++)
-    <li class="page-item {{ $productos->currentPage() == $i ? 'active' : '' }}">
-        <a class="page-link" href="{{ $productos->appends(request()->query())->url($i) }}">
-            {{ $i }}
-        </a>
-    </li>
-@endfor
-
-                                <!-- Página siguiente -->
-                                <li class="page-item {{ $productos->currentPage() == $productos->lastPage() ? 'disabled' : '' }}">
-    <a class="page-link" href="{{ $productos->appends(request()->query())->nextPageUrl() }}" aria-label="Siguiente">&raquo;</a>
-</li>
-                            </ul>
-                        </nav>
-                    </div>
-                @endif
+                @if($productos->hasPages())
+    <div class="mt-5 d-flex justify-content-center">
+        {{ $productos->appends(request()->query())->links('pagination::bootstrap-5') }}
+    </div>
+@endif
             @else
                 <div class="no-productos text-center py-5">
                     <i class="bi bi-exclamation-triangle-fill fs-3"></i>
@@ -139,3 +103,11 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+<script>
+document.querySelector("form").addEventListener("submit", function () {
+    sessionStorage.removeItem("autoFiltroCategoria");
+});
+</script>
+@endpush

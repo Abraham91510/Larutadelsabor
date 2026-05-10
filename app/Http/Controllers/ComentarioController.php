@@ -52,11 +52,31 @@ class ComentarioController extends Controller
     }
 
     private function DatosMenu()
-    {
-        return \App\Models\OpcionMenu::with('subopciones')
-            ->orderBy('orden')
-            ->get();
+{
+    $tipoUsuario = session('tipo_usuario');
+
+    $query = \App\Models\OpcionMenu::with(['subopciones' => function ($q) use ($tipoUsuario) {
+
+        // Si es comerciante ocultar opciones exclusivas cliente
+        if ($tipoUsuario === 'comerciante') {
+
+            $q->whereNotIn('url', [
+                '/clientes',
+                '/comentarios'
+            ]);
+        }
+
+    }]);
+
+    // Ocultar menú comentarios al comerciante
+    if ($tipoUsuario === 'comerciante') {
+
+        $query->where('slug', '!=', 'aprende')
+              ->where('slug', '!=', 'comentarios');
     }
+
+    return $query->orderBy('orden')->get();
+}
 
     private function DatosRedesSociales()
     {

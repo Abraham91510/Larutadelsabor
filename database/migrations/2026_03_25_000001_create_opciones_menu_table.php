@@ -24,6 +24,10 @@ return new class extends Migration
 
             $table->integer('orden')->default(0);
 
+            // 👇 NUEVO
+            $table->string('roles')
+                ->default('cliente,comerciante');
+
             $table->timestamps();
 
         });

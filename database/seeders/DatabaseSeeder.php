@@ -19,6 +19,11 @@ use Database\Seeders\Administrador\DatosEmpresaSeeder;
 use Database\Seeders\Administrador\RedesSocialesSeeder;
 use Database\Seeders\Administrador\EnlacesConoceMasSeeder;
 
+use App\Models\ProductoCaracteristica;
+use App\Models\ProductoDetalle;
+use App\Models\ProductoStock;
+use App\Models\Producto;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -116,6 +121,95 @@ class DatabaseSeeder extends Seeder
 
     // 🥤 BEBIDA (1)
     ['id'=>31,'nombre'=>'Agua Fresca Jamaica','slug'=>'agua-jamaica','descripcion'=>'Bebida natural','precio'=>20,'rating'=>4.5,'icono'=>'bi-cup','subcategoria_id'=>4,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+    ['id'=>32,'nombre'=>'Torta de Jamón','slug'=>'torta-jamon','descripcion'=>'Torta clásica mexicana','precio'=>40,'rating'=>4.4,'icono'=>'bi-basket','subcategoria_id'=>2,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>33,'nombre'=>'Torta de Milanesa','slug'=>'torta-milanesa','descripcion'=>'Torta con milanesa crujiente','precio'=>55,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>2,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>34,'nombre'=>'Hot Dog Especial','slug'=>'hot-dog-especial','descripcion'=>'Hot dog con tocino y aderezos','precio'=>35,'rating'=>4.3,'icono'=>'bi-basket','subcategoria_id'=>2,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>35,'nombre'=>'Quesadillas de Queso','slug'=>'quesadillas-queso','descripcion'=>'Tortilla con queso fundido','precio'=>30,'rating'=>4.6,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>36,'nombre'=>'Quesadillas de Pollo','slug'=>'quesadillas-pollo','descripcion'=>'Quesadillas con pollo deshebrado','precio'=>45,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>37,'nombre'=>'Enchiladas Verdes','slug'=>'enchiladas-verdes','descripcion'=>'Enchiladas con salsa verde','precio'=>70,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>38,'nombre'=>'Enchiladas Rojas','slug'=>'enchiladas-rojas','descripcion'=>'Enchiladas con salsa roja','precio'=>70,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>39,'nombre'=>'Sopa de Tortilla','slug'=>'sopa-tortilla','descripcion'=>'Sopa tradicional mexicana','precio'=>60,'rating'=>4.6,'icono'=>'bi-cup','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>40,'nombre'=>'Arroz con Pollo','slug'=>'arroz-pollo','descripcion'=>'Arroz sazonado con pollo','precio'=>75,'rating'=>4.5,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>41,'nombre'=>'Flautas Doradas','slug'=>'flautas-doradas','descripcion'=>'Flautas crujientes con crema','precio'=>65,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>42,'nombre'=>'Molletes','slug'=>'molletes','descripcion'=>'Pan con frijoles y queso','precio'=>45,'rating'=>4.4,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>43,'nombre'=>'Chilaquiles Verdes','slug'=>'chilaquiles-verdes','descripcion'=>'Totopos con salsa verde','precio'=>55,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>44,'nombre'=>'Chilaquiles Rojos','slug'=>'chilaquiles-rojos','descripcion'=>'Totopos con salsa roja','precio'=>55,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>45,'nombre'=>'Mole Poblano','slug'=>'mole-poblano','descripcion'=>'Pollo con mole tradicional','precio'=>90,'rating'=>4.9,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>46,'nombre'=>'Pozole Rojo','slug'=>'pozole-rojo','descripcion'=>'Pozole tradicional mexicano','precio'=>85,'rating'=>4.9,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>47,'nombre'=>'Pozole Blanco','slug'=>'pozole-blanco','descripcion'=>'Pozole suave tradicional','precio'=>85,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>48,'nombre'=>'Tostadas de Tinga','slug'=>'tostadas-tinga','descripcion'=>'Tostadas con pollo en chipotle','precio'=>40,'rating'=>4.6,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>49,'nombre'=>'Tostadas de Ceviche','slug'=>'tostadas-ceviche','descripcion'=>'Tostadas de pescado fresco','precio'=>60,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>50,'nombre'=>'Camarones Empanizados','slug'=>'camarones-empanizados','descripcion'=>'Camarones crujientes','precio'=>120,'rating'=>4.9,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>51,'nombre'=>'Pescado Frito','slug'=>'pescado-frito','descripcion'=>'Pescado entero frito','precio'=>130,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>1,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>72,'nombre'=>'Pan de Muerto Tradicional','slug'=>'pan-de-muerto-tradicional','descripcion'=>'Pan de muerto clásico mexicano','precio'=>35,'rating'=>5.0,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>73,'nombre'=>'Pan de Muerto Relleno de Nata','slug'=>'pan-de-muerto-nata','descripcion'=>'Pan de muerto con relleno cremoso','precio'=>45,'rating'=>4.9,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>74,'nombre'=>'Rosca de Reyes Tradicional','slug'=>'rosca-de-reyes-tradicional','descripcion'=>'Rosca clásica de temporada','precio'=>120,'rating'=>4.9,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>75,'nombre'=>'Rosca de Reyes con Relleno','slug'=>'rosca-de-reyes-relleno','descripcion'=>'Rosca rellena de crema o chocolate','precio'=>150,'rating'=>5.0,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>76,'nombre'=>'Galletas Navideñas de Jengibre','slug'=>'galletas-jengibre-navidad','descripcion'=>'Galletas especiadas navideñas','precio'=>40,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>77,'nombre'=>'Galletas de Navidad Decoradas','slug'=>'galletas-navidad-decoradas','descripcion'=>'Galletas con glaseado festivo','precio'=>45,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>78,'nombre'=>'Chocolate Caliente Navideño','slug'=>'chocolate-navideno','descripcion'=>'Chocolate espeso de temporada','precio'=>38,'rating'=>4.8,'icono'=>'bi-cup','subcategoria_id'=>5,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>79,'nombre'=>'Ponche Navideño','slug'=>'ponche-navideno','descripcion'=>'Bebida caliente tradicional','precio'=>30,'rating'=>4.9,'icono'=>'bi-cup','subcategoria_id'=>4,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>80,'nombre'=>'Tamales de Dulce','slug'=>'tamales-dulce','descripcion'=>'Tamales dulces de temporada','precio'=>25,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>81,'nombre'=>'Tamales de Verde','slug'=>'tamales-verde','descripcion'=>'Tamales de salsa verde','precio'=>30,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>82,'nombre'=>'Tamales de Rojo','slug'=>'tamales-rojo','descripcion'=>'Tamales de salsa roja','precio'=>30,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>83,'nombre'=>'Buñuelos de Viento','slug'=>'bunuelos-de-viento','descripcion'=>'Postre crujiente con azúcar','precio'=>20,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>84,'nombre'=>'Chocolate Abuelita Caliente','slug'=>'chocolate-abuelita-caliente','descripcion'=>'Chocolate tradicional mexicano','precio'=>35,'rating'=>4.9,'icono'=>'bi-cup','subcategoria_id'=>5,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>85,'nombre'=>'Panettone Navideño','slug'=>'panettone-navideno','descripcion'=>'Pan dulce estilo italiano','precio'=>90,'rating'=>4.8,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>86,'nombre'=>'Strudel de Manzana','slug'=>'strudel-manzana','descripcion'=>'Postre de manzana y canela','precio'=>85,'rating'=>4.7,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>87,'nombre'=>'Pastel de Zanahoria','slug'=>'pastel-zanahoria','descripcion'=>'Pastel esponjoso con crema','precio'=>95,'rating'=>4.9,'icono'=>'bi-cake','subcategoria_id'=>6,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>88,'nombre'=>'Pastel de Chocolate Navideño','slug'=>'pastel-chocolate-navidad','descripcion'=>'Pastel especial de temporada','precio'=>120,'rating'=>5.0,'icono'=>'bi-cake','subcategoria_id'=>6,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>89,'nombre'=>'Helado de Rompope','slug'=>'helado-rompope','descripcion'=>'Helado sabor rompope','precio'=>50,'rating'=>4.8,'icono'=>'bi-cup','subcategoria_id'=>6,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>90,'nombre'=>'Fresas con Crema Navideñas','slug'=>'fresas-crema-navidad','descripcion'=>'Postre frío de temporada','precio'=>55,'rating'=>4.7,'icono'=>'bi-cup','subcategoria_id'=>6,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+['id'=>91,'nombre'=>'Churros con Chocolate','slug'=>'churros-chocolate','descripcion'=>'Churros tradicionales con salsa','precio'=>45,'rating'=>4.9,'icono'=>'bi-basket','subcategoria_id'=>11,'is_destacado'=>0,'created_at'=>$now,'updated_at'=>$now],
+
+
+
+
+
+
+
+
+
 ]);
 
         // RELACIÓN PRODUCTO-COLONIA
@@ -179,26 +273,116 @@ class DatabaseSeeder extends Seeder
         ]);
 
 DB::table('opciones_menu')->insert([
-    ['id'=>1,'nombre'=>'Inicio','slug'=>'inicio','url'=>'/inicio','orden'=>0,'created_at'=>$now,'updated_at'=>$now],
+    [
+        'id'=>1,
+        'nombre'=>'Inicio',
+        'slug'=>'inicio',
+        'url'=>'/plataforma/inicio',
+        'roles'=>'cliente,comerciante',
+        'orden'=>0,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
 
-    ['id'=>2,'nombre'=>'Categorías','slug'=>'categorias','url'=>'#','orden'=>1,'created_at'=>$now,'updated_at'=>$now],
+    [
+        'id'=>2,
+        'nombre'=>'Categorías',
+        'slug'=>'categorias',
+        'url'=>'#',
+        'roles'=>'cliente,comerciante',
+        'orden'=>1,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
 
-    ['id'=>3,'nombre'=>'Comerciantes','slug'=>'comerciantes','url'=>'#','orden'=>2,'created_at'=>$now,'updated_at'=>$now],
+    [
+        'id'=>3,
+        'nombre'=>'Comerciantes',
+        'slug'=>'comerciantes',
+        'url'=>'#',
+        'roles'=>'cliente,comerciante',
+        'orden'=>2,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
 
-    ['id'=>4,'nombre'=>'Comentarios','slug'=>'aprende','url'=>'/comentarios','orden'=>3,'created_at'=>$now,'updated_at'=>$now],
+    [
+        'id'=>4,
+        'nombre'=>'Comentarios',
+        'slug'=>'comentarios',
+        'url'=>'/plataforma/comentarios',
+        'roles'=>'cliente',
+        'orden'=>3,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
 ]);
 
 DB::table('subopciones_menu')->insert([
 
     // Comerciantes
-    ['opcion_id'=>2,'nombre'=>'Cerca de mí','url'=>'/cerca_mi','icono'=>'bi-geo-alt','created_at'=>$now,'updated_at'=>$now],
-    ['opcion_id'=>2,'nombre'=>'Mejor calificados','url'=>'/mejor_calificados','icono'=>'bi-star','created_at'=>$now,'updated_at'=>$now],
-    ['opcion_id'=>2,'nombre'=>'Nuevos','url'=>'/nuevos_comerciantes','icono'=>'bi-plus-circle','created_at'=>$now,'updated_at'=>$now],
+    [
+        'opcion_id'=>3,
+        'nombre'=>'Cerca de mí',
+        'url'=>'/plataforma/cerca_mi',
+        'icono'=>'bi-geo-alt',
+        'roles'=>'cliente,comerciante',
+        'orden'=>1,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>3,
+        'nombre'=>'Mejor calificados',
+        'url'=>'/plataforma/mejor_calificados',
+        'icono'=>'bi-star',
+        'roles'=>'cliente,comerciante',
+        'orden'=>2,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>3,
+        'nombre'=>'Nuevos',
+        'url'=>'/plataforma/nuevos_comerciantes',
+        'icono'=>'bi-plus-circle',
+        'roles'=>'cliente,comerciante',
+        'orden'=>3,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
 
     // Aprende
-    ['opcion_id'=>3,'nombre'=>'Clientes','url'=>'/clientes','icono'=>'bi-person','created_at'=>$now,'updated_at'=>$now],
-    ['opcion_id'=>3,'nombre'=>'Comerciantes','url'=>'/comerciantes','icono'=>'bi-shop','created_at'=>$now,'updated_at'=>$now],
-    ['opcion_id'=>3,'nombre'=>'Pagos','url'=>'/pagos','icono'=>'bi-credit-card','created_at'=>$now,'updated_at'=>$now],
+    [
+        'opcion_id'=>2,
+        'nombre'=>'Clientes',
+        'url'=>'/plataforma/clientes',
+        'icono'=>'bi-person',
+        'roles'=>'cliente,comerciante',
+        'orden'=>1,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>2,
+        'nombre'=>'Comerciantes',
+        'url'=>'/plataforma/comerciantes',
+        'icono'=>'bi-shop',
+        'roles'=>'cliente,comerciante',
+        'orden'=>2,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>2,
+        'nombre'=>'Pagos',
+        'url'=>'/plataforma/pagos',
+        'icono'=>'bi-credit-card',
+        'roles'=>'cliente,comerciante',
+        'orden'=>3,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
 ]);
 
 $this->call([
@@ -214,7 +398,41 @@ $this->call([
      EnlacesConoceMasSeeder::class,
 ]);
 
+foreach (Producto::all() as $producto) {
+
+            ProductoCaracteristica::insert([
+                ['producto_id'=>$producto->id,'nombre'=>'Color','descripcion'=>'Rojo'],
+                ['producto_id'=>$producto->id,'nombre'=>'Peso','descripcion'=>'250g'],
+                ['producto_id'=>$producto->id,'nombre'=>'Origen','descripcion'=>'Artesanal']
+            ]);
+
+            ProductoDetalle::create([
+                'producto_id'=>$producto->id,
+                'descripcion'=>'Producto premium',
+                'ingredientes'=>'Carne, pan',
+                'nutricional'=>'500 kcal',
+                'advertencias'=>'Contiene gluten'
+            ]);
+
+            ProductoStock::create([
+                'producto_id'=>$producto->id,
+                'stock'=>20
+            ]);
+        }
+
+        DB::table('cupones')->insert([
+            ['codigo'=>'NUEVO26','descuento'=>20,'tipo'=>'porcentaje'],
+            ['codigo'=>'BBQ10','descuento'=>10,'tipo'=>'fijo']
+        ]);
+
+
+
     }
+
+
+
+
+    
     
 
     

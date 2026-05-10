@@ -13,7 +13,8 @@ class SubopcionMenu extends Model
         'nombre',
         'url',
         'icono',
-        'orden'
+        'orden',
+        'roles'
     ];
 
     public function opcion()

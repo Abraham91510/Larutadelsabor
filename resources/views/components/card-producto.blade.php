@@ -18,7 +18,7 @@
         box-shadow: 0 10px 25px rgba(0,0,0,.15), 
                     0 20px 50px rgba(0,0,0,.25);
         margin: 10px auto;
-        max-width: 420px;
+        max-width: 300px;
      "
      onmouseover="this.style.transform='translateY(-8px) scale(1.01)'; 
                  this.style.boxShadow='0 20px 40px rgba(0,0,0,.25), 0 30px 70px rgba(0,0,0,.35)';"
@@ -30,12 +30,12 @@
 
         <div id="{{ $carouselId }}" class="carousel slide rounded-top-4 mb-3 overflow-hidden" data-bs-ride="carousel">
             
-            <div class="carousel-inner" style="height: 200px;">
+            <div class="carousel-inner" style="height: 140px;">
                 @foreach($imagenes as $i => $img)
                     <div class="carousel-item @if($i==0) active @endif">
                         <img src="{{ asset('Imagenes/'.$img) }}" 
                              class="d-block w-100"
-                             style="height:200px; object-fit:cover;">
+                             style="height:140px; object-fit:cover;">
                     </div>
                 @endforeach
             </div>

@@ -93,6 +93,34 @@
                 </div>
             </div>
 
+           <div class="p-3 mb-3 text-center" style="border: 1px solid #ced4da; border-radius: 15px; background-color: #f8f9fa;">
+    <p class="fw-bold mb-3" style="color: #6c757d; font-size: 0.85rem; text-transform: uppercase;">
+        Verificación de Seguridad
+    </p>
+    
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+        <!-- Imagen generada por nuestro controlador -->
+        <div style="background: #212529; border-radius: 8px; padding: 5px; display: flex; align-items: center;">
+          <img src="{{ route('captcha.simple') }}" id="captcha-img" style="border-radius:4px;">
+        </div>
+        
+        <!-- Botón de recarga (Vanilla JS) -->
+        <button type="button"
+onclick="document.getElementById('captcha-img').src='{{ route('captcha.simple') }}?'+Math.random()">
+↻
+</button>
+    </div>
+
+    <div class="px-2">
+        <input type="text" 
+               name="captcha" 
+               class="form-control text-center" 
+               placeholder="Ingresa el código anterior" 
+               style="border-radius: 25px; border: 2px solid #80bdff; height: 45px;" 
+               required>
+    </div>
+</div>
+
             <button type="submit" class="btn btn-login">
                 Entrar
             </button>
