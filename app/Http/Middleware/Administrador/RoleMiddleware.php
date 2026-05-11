@@ -8,13 +8,15 @@ class RoleMiddleware
 {
     public function handle($request, Closure $next, $role)
     {
-        if (!session()->has('user')) {
+        if (!session()->has('admin')) {
+
             return redirect('/login/admin');
         }
 
-        $user = session('user');
+        $admin = session('admin');
 
-        if ($user->role !== $role) {
+        if ($admin->role !== $role) {
+
             return redirect('/dashboard');
         }
 

@@ -3,29 +3,33 @@
 namespace App\Http\Middleware\Administrador;
 
 use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class SessionTimeout
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle($request, Closure $next)
     {
-        if (session()->has('last_activity')) {
+        if (session()->has('last_activity_admin')) {
 
-            $inactive = time() - session('last_activity');
+            $inactive =
+                time() - session('last_activity_admin');
 
             if ($inactive > 600) {
-                session()->flush();
-                return redirect('/login/admin')->with('error', 'Sesión expirada');
+
+                session()->forget('admin');
+
+                session()->forget('last_activity_admin');
+
+                return redirect('/login/admin')
+                    ->with(
+                        'error',
+                        'Sesión expirada'
+                    );
             }
         }
 
-        session(['last_activity' => time()]);
+        session([
+            'last_activity_admin' => time()
+        ]);
 
         return $next($request);
     }

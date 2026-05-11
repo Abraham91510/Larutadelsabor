@@ -6,9 +6,9 @@ use Closure;
 
 class RoleMiddleware
 {
-   public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, $role)
     {
-        if (!session()->has('user')) {
+        if (!session()->has('usuario')) {
 
             return redirect('/login/usuario');
         }
@@ -17,7 +17,7 @@ class RoleMiddleware
 
         if ($tipo !== $role) {
 
-            return redirect('/inicio/usuario');
+            return redirect('/plataforma/inicio');
         }
 
         return $next($request);

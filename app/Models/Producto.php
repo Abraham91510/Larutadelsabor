@@ -33,6 +33,18 @@ class Producto extends Model
         return $this->hasMany(ProductoImagen::class, 'producto_id');
     }
 
+
+public function comerciantes()
+{
+    return $this->belongsToMany(
+        \App\Models\Usuario\Comerciante::class,
+        'comerciante_producto',
+        'producto_id',
+        'comerciante_id'
+    );
+}
+    
+
     /**
      * Obtener productos filtrados (Eloquent)
      */

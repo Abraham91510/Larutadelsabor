@@ -19,4 +19,15 @@ class Comerciante extends Model
     {
         $this->attributes['password'] = bcrypt($value);
     }
+
+public function productos()
+{
+    return $this->belongsToMany(
+        \App\Models\Producto::class,
+        'comerciante_producto',
+        'comerciante_id',
+        'producto_id'
+    );
+}
+
 }

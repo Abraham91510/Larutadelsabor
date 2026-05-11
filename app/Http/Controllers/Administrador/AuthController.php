@@ -13,7 +13,6 @@ use App\Mail\RegistroExitosoMail;
 
 class AuthController extends Controller
 {
-    // 🟢 DATOS EMPRESA
     private function DatosGeneralesDeLaEmpresa()
     {
         return DatosEmpresa::first()?->toArray() ?? [
@@ -26,7 +25,9 @@ class AuthController extends Controller
         ];
     }
 
-    // 🟢 LOGIN VIEW
+    // =========================
+    // LOGIN VIEW
+    // =========================
     public function login()
     {
         return view('administrador.vistas.login_admin', [
@@ -34,7 +35,9 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🟢 REGISTER VIEW
+    // =========================
+    // REGISTER VIEW
+    // =========================
     public function register()
     {
         return view('administrador.vistas.registro_admin', [
@@ -42,119 +45,103 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🟢 REGISTRO
-    // 🟢 REGISTRO CORREGIDO
-public function saveRegister(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:admin_users,email',
-        'password' => [
-            'required',
-            'min:8',
-            'regex:/[A-Z]/',
-            'regex:/[@$!%*?&.#_-]/'
-        ],
-        'role' => 'required',
-        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-    ], [
-        'name.required' => 'El nombre es obligatorio.',
-        'email.required' => 'El correo electrónico es obligatorio.',
-        'email.unique'   => 'Este correo ya está registrado, intenta con otro.', // Mensaje que faltaba
-        'password.required' => 'La contraseña no puede estar vacía.',
-        'password.regex' => 'Debe tener mayúscula y símbolo especial.',
-    'password.min' => 'Mínimo 8 caracteres.',
-        'role.required' => 'Debes seleccionar un rol.',
-        'foto.required' => 'La foto de perfil es obligatoria para el registro.' // Mensaje personalizado
-        
-    ]);
+    // =========================
+    // REGISTRO
+    // =========================
+    public function saveRegister(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:admin_usuarios,email',
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/[A-Z]/',
+                'regex:/[@$!%*?&.#_-]/'
+            ],
+            'role' => 'required',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+        ]);
 
-    // 📸 SUBIR FOTO A public/Imagenes
-    $fotoNombre = null;
+        $fotoNombre = null;
 
-    if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
-        $file = $request->file('foto');
-        
-        // Creamos un nombre único: ejemplo 1714285400_carlos.jpg
-        $fotoNombre = time() . '_' . $file->getClientOriginalName();
-        
-        // Movemos el archivo directamente a public/Imagenes
-        $file->move(public_path('Imagenes'), $fotoNombre);
+        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+            $file = $request->file('foto');
+            $fotoNombre = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('Imagenes'), $fotoNombre);
+        }
+
+        $usuario = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'role' => $request->role,
+            'foto' => $fotoNombre
+        ]);
+
+        try {
+            Mail::to($usuario->email)->send(
+                new RegistroExitosoMail($usuario, $this->DatosGeneralesDeLaEmpresa())
+            );
+        } catch (\Exception $e) {
+            Log::error("Error Mail: " . $e->getMessage());
+        }
+
+        return redirect('/login/admin')->with('success', 'Usuario registrado con éxito.');
     }
 
-    // 🔐 CREAR USUARIO
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => $request->password, // El mutator en tu modelo User se encarga del Hash::make
-        'role' => $request->role,
-        'foto' => $fotoNombre // Guardamos solo el nombre del archivo
-    ]);
-
-    try {
-        Mail::to($user->email)->send(
-            new RegistroExitosoMail($user, $this->DatosGeneralesDeLaEmpresa())
-        );
-    } catch (\Exception $e) {
-        Log::error("Error Mail: " . $e->getMessage());
-    }
-
-    return redirect('/login/admin')->with('success', 'Usuario registrado con éxito.');
-}
-
-    // 🟢 LOGIN
+    // =========================
+    // LOGIN POST
+    // =========================
     public function loginPost(Request $request)
     {
+        $request->validate([
+            'captcha' => 'required'
+        ]);
 
-  
+        $captchaUser = trim(strtoupper($request->captcha));
+        $captchaSession = session('captcha_code');
 
-$request->validate(['captcha' => 'required'], ['captcha.required' => 'Debes ingresar el captcha.']);
+        session()->forget('captcha_code');
 
-    $captchaUser = trim(strtoupper($request->captcha));
-    $captchaSession = session('captcha_code'); // Ya está en mayúsculas desde el controlador
+        if (!$captchaSession || $captchaUser !== $captchaSession) {
+            return back()->with('error', 'Captcha incorrecto.')->withInput();
+        }
 
-    // IMPORTANTE: Borrarlo apenas se lee para que no sea reutilizable
-    session()->forget('captcha_code');
+        $usuario = User::where('email', $request->email)->first();
 
-    if (!$captchaSession || $captchaUser !== $captchaSession) {
-        return back()->with('error', 'Captcha incorrecto.')->withInput();
-    }
-
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
+        if (!$usuario) {
             return back()->with('error', 'El correo no existe.');
         }
 
-        if (!Hash::check($request->password, $user->password)) {
+        if ($usuario->role !== 'admin') {
+            return back()->with('error', 'No tienes permisos de administrador.');
+        }
+
+        if (!Hash::check($request->password, $usuario->password)) {
             return back()->with('error', 'Contraseña incorrecta.');
         }
 
+        // =========================
+        // SESIÓN CORRECTA ADMIN
+        // =========================
         session([
-            'user' => $user,
-            'last_activity' => time()
+            'admin' => $usuario,
+            'last_activity_admin' => time()
         ]);
 
-
-
-
-        
-
         return redirect('/dashboard')
-            ->with('success', 'Bienvenido ' . $user->name);
-
-
-
+            ->with('success', 'Bienvenido ' . $usuario->name);
     }
 
-    // 🟢 LOGOUT
+    // =========================
+    // LOGOUT
+    // =========================
     public function logout()
     {
-        session()->forget(['user', 'last_activity']);
+        session()->forget(['admin', 'last_activity_admin']);
         session()->flush();
+
         return redirect('/login/admin');
     }
-
-    
 }

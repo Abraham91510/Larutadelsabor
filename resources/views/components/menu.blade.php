@@ -131,28 +131,31 @@
 
             </ul>
 
-            {{-- BOTONES --}}
             <div class="d-flex gap-3 align-items-center">
-               @if(isset($slot_acciones))
-                    {!! $slot_acciones !!}
-                @else
+    {{-- Aquí van tus botones de Login/Registro --}}
+    @if(!isset($slot_acciones))
+        <a href="#" class="btn btn-outline-dark rounded-pill">Iniciar sesión</a>
+    @endif
 
-                    <a href="#" class="btn btn-outline-dark rounded-pill">
-                        <i class="bi bi-person-circle me-1"></i>
-                        Iniciar sesión
-                    </a>
+    {{-- EL CARRITO: Ponlo justo aquí, antes de cerrar el div --}}
+    @php
+        $total = 0;
+        if(session()->has('carrito')) {
+            foreach(session('carrito') as $item) {
+                $total += $item['cantidad'];
+            }
+        }
+    @endphp
 
-                    <a href="#" class="btn btn-success rounded-pill">
-                        <i class="bi bi-person-plus"></i> Registro
-                    </a> 
-
-                    <a href="{{ route('carrito') }}" class="btn btn-warning rounded-pill">
-                        <i class="bi bi-cart"></i> Carrito
-                    </a>
-
-                @endif
-
-            </div>
+    <a href="{{ route('carrito') }}" class="btn btn-warning rounded-pill position-relative">
+        <i class="bi bi-cart"></i> Carrito
+        @if($total > 0)
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ $total }}
+            </span>
+        @endif
+    </a>
+</div>
 
         </div>
     </div>

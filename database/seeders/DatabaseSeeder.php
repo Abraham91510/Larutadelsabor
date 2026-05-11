@@ -23,6 +23,7 @@ use App\Models\ProductoCaracteristica;
 use App\Models\ProductoDetalle;
 use App\Models\ProductoStock;
 use App\Models\Producto;
+use App\Models\TarjetaCliente;
 
 class DatabaseSeeder extends Seeder
 {
@@ -316,6 +317,41 @@ DB::table('opciones_menu')->insert([
         'created_at'=>$now,
         'updated_at'=>$now
     ],
+
+[
+        'id'=>5,
+        'nombre'=>'Carrito',
+        'slug'=>'carrito',
+        'url'=>'/plataforma/carrito',
+        'roles'=>'cliente',
+        'orden'=>4,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+
+    [
+        'id'=>6,
+        'nombre'=>'Mis pedidos',
+        'slug'=>'mis-pedidos',
+        'url'=>'/plataforma/mis-pedidos',
+        'roles'=>'cliente',
+        'orden'=>5,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+
+    [
+        'id'=>7,
+        'nombre'=>'Tarjeta',
+        'slug'=>'tarjeta',
+        'url'=>'/plataforma/tarjeta',
+        'roles'=>'cliente',
+        'orden'=>6,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+
+
 ]);
 
 DB::table('subopciones_menu')->insert([
@@ -383,6 +419,99 @@ DB::table('subopciones_menu')->insert([
         'created_at'=>$now,
         'updated_at'=>$now
     ],
+
+// 🛒 Carrito
+    [
+        'opcion_id'=>5,
+        'nombre'=>'Ver carrito',
+        'url'=>'/plataforma/carrito',
+        'icono'=>'bi-cart',
+        'roles'=>'cliente',
+        'orden'=>4,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>5,
+        'nombre'=>'Aplicar cupón',
+        'url'=>'/plataforma/carrito',
+        'icono'=>'bi-ticket-perforated',
+        'roles'=>'cliente',
+        'orden'=>5,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+
+    // 📦 Pedidos
+    [
+        'opcion_id'=>6,
+        'nombre'=>'Mis pedidos',
+        'url'=>'/plataforma/mis-pedidos',
+        'icono'=>'bi-receipt',
+        'roles'=>'cliente',
+        'orden'=>6,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>6,
+        'nombre'=>'Ver QR pedido',
+        'url'=>'/plataforma/mis-pedidos',
+        'icono'=>'bi-qr-code',
+        'roles'=>'cliente',
+        'orden'=>7,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+
+    // 💳 Tarjeta
+    [
+        'opcion_id'=>7,
+        'nombre'=>'Mi tarjeta',
+        'url'=>'/plataforma/tarjeta',
+        'icono'=>'bi-credit-card',
+        'roles'=>'cliente',
+        'orden'=>8,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+    [
+        'opcion_id'=>7,
+        'nombre'=>'Recargar saldo',
+        'url'=>'/plataforma/tarjeta',
+        'icono'=>'bi-plus-circle',
+        'roles'=>'cliente',
+        'orden'=>9,
+        'created_at'=>$now,
+        'updated_at'=>$now
+    ],
+
+
+
+]);
+
+
+
+DB::table('tarjetas_cliente')->insert([
+
+[
+    'cliente_id'=>1,
+    'titular'=>'Carlos Ojeda',
+    'numero'=>'4111111111111111',
+    'cvv'=>'123',
+    'expiracion'=>'12/29',
+    'saldo'=>5000
+],
+
+[
+    'cliente_id'=>2,
+    'titular'=>'Cliente Demo',
+    'numero'=>'5555555555554444',
+    'cvv'=>'456',
+    'expiracion'=>'11/28',
+    'saldo'=>50
+]
+
 ]);
 
 $this->call([

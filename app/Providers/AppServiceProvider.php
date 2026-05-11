@@ -8,7 +8,7 @@ use Illuminate\Pagination\Paginator;
 
 use App\Models\Administrador\OpcionDashboard;
 use App\Models\Administrador\DatosEmpresa;
-use App\Models\OpcionMenu; // 👈 MODELO DEL FRONTEND (ajústalo si se llama diferente)
+use App\Models\OpcionMenu;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,39 +21,44 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
 
-            /* =========================
-               USUARIO DE SESIÓN
-            ========================= */
-            $user = session('user');
+            // =========================
+            // SESIONES SEPARADAS
+            // =========================
+            $admin = session('admin');
+            $usuario = session('usuario');
 
-            if (!$user) {
-                $user = (object)[
+            // =========================
+            // SI NO HAY USUARIO → INVITADO
+            // =========================
+            if (!$admin && !$usuario) {
+                $usuario = (object)[
                     'name' => 'Invitado',
                     'role' => 'invitado',
                     'foto' => 'default.png'
                 ];
             }
 
-            /* =========================
-               MENÚ FRONTEND (WEB)
-            ========================= */
+            // =========================
+            // MENÚ FRONTEND
+            // =========================
             $menu = OpcionMenu::with(['subopciones'])
                 ->orderBy('orden')
                 ->get();
 
-            /* =========================
-               MENÚ DASHBOARD (ADMIN)
-            ========================= */
-            $menuDashboard = OpcionDashboard::with(['subopciones' => function ($query) use ($user) {
+            // =========================
+            // MENÚ DASHBOARD (ADMIN)
+            // =========================
+            $menuDashboard = OpcionDashboard::with(['subopciones' => function ($query) use ($admin) {
 
-                if ($user->role !== 'admin') {
+                // SOLO ADMIN VE TODO
+                if (!$admin || $admin->role !== 'admin') {
                     $query->where('role', 'all');
                 }
 
             }])
-            ->where(function ($query) use ($user) {
+            ->where(function ($query) use ($admin) {
 
-                if ($user->role !== 'admin') {
+                if (!$admin || $admin->role !== 'admin') {
                     $query->where('role', 'all');
                 }
 
@@ -61,41 +66,30 @@ class AppServiceProvider extends ServiceProvider
             ->orderBy('orden')
             ->get();
 
-            /* =========================
-               DATOS EMPRESA
-            ========================= */
+            // =========================
+            // DATOS EMPRESA
+            // =========================
             $generales = DatosEmpresa::first() ?? (object)[
-    'nombre_empresa' => 'La Ruta del Sabor',
-    'eslogan_empresa' => 'Siempre visible, Siempre a tiempo.',
-    'logo_empresa' => 'Imagenes/La Ruta Del Sabor_Logo.ico'
-];
+                'nombre_empresa' => 'La Ruta del Sabor',
+                'eslogan_empresa' => 'Siempre visible, Siempre a tiempo.',
+                'logo_empresa' => 'Imagenes/La Ruta Del Sabor_Logo.ico'
+            ];
 
-            /* =========================
-               COMPARTIR VISTAS
-            ========================= */
+            // =========================
+            // COMPARTIR VISTAS
+            // =========================
             $view->with([
-                'menu' => $menu,                     // FRONTEND
-                'menuDashboard' => $menuDashboard,   // DASHBOARD
-                'user' => $user,
+                'menu' => $menu,
+                'menuDashboard' => $menuDashboard,
+                'admin' => $admin,
+                'usuario' => $usuario,
                 'generales' => $generales
             ]);
 
-
-/* =========================
-   NUEVO:
-   CLIENTE Y COMERCIANTE
-========================= */
-View::share(
-    'tipoUsuario',
-    session('tipo_usuario')
-);
-
-
-
-
+            // tipo de usuario global
+            View::share('tipoUsuario', session('tipo_usuario'));
         });
 
-
-         Paginator::useBootstrap();
+        Paginator::useBootstrap();
     }
 }

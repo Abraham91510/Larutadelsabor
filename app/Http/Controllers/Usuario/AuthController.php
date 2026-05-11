@@ -14,7 +14,6 @@ use App\Mail\RegistroExitosoMail;
 
 class AuthController extends Controller
 {
-    // 🟢 DATOS EMPRESA
     private function DatosGeneralesDeLaEmpresa()
     {
         return DatosEmpresa::first()?->toArray() ?? [
@@ -27,7 +26,9 @@ class AuthController extends Controller
         ];
     }
 
-    // 🟢 VISTA LOGIN
+    // =========================
+    // LOGIN VIEW
+    // =========================
     public function login()
     {
         return view('usuario.vistas.login_usuario', [
@@ -35,7 +36,9 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🟢 VISTA REGISTER
+    // =========================
+    // REGISTER VIEW
+    // =========================
     public function register()
     {
         return view('usuario.vistas.registro_usuario', [
@@ -43,7 +46,9 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🟢 REGISTRO
+    // =========================
+    // REGISTRO
+    // =========================
     public function saveRegister(Request $request)
     {
         $request->validate([
@@ -59,7 +64,6 @@ class AuthController extends Controller
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        // 📸 FOTO
         $fotoNombre = null;
 
         if ($request->hasFile('foto')) {
@@ -68,29 +72,25 @@ class AuthController extends Controller
             $file->move(public_path('Imagenes'), $fotoNombre);
         }
 
-        // 🟢 CLIENTE
         if ($request->tipo_usuario == "cliente") {
 
             if (Cliente::where('email', $request->email)->exists()) {
                 return back()->with('error', 'El correo ya existe.');
             }
 
-            $user = Cliente::create([
+            $usuario = Cliente::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
                 'foto' => $fotoNombre
             ]);
-        }
-
-        // 🟢 COMERCIANTE
-        else {
+        } else {
 
             if (Comerciante::where('email', $request->email)->exists()) {
                 return back()->with('error', 'El correo ya existe.');
             }
 
-            $user = Comerciante::create([
+            $usuario = Comerciante::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
@@ -98,23 +98,20 @@ class AuthController extends Controller
             ]);
         }
 
-        // 📧 EMAIL
         try {
-            Mail::to($user->email)->send(
-                new RegistroExitosoMail(
-                    $user,
-                    $this->DatosGeneralesDeLaEmpresa()
-                )
+            Mail::to($usuario->email)->send(
+                new RegistroExitosoMail($usuario, $this->DatosGeneralesDeLaEmpresa())
             );
         } catch (\Exception $e) {
             Log::error("Error Mail: " . $e->getMessage());
         }
 
-        return redirect('/login/usuario')
-            ->with('success', 'Usuario registrado con éxito.');
+        return redirect('/login/usuario')->with('success', 'Usuario registrado con éxito.');
     }
 
-    // 🟢 LOGIN POST
+    // =========================
+    // LOGIN POST
+    // =========================
     public function loginPost(Request $request)
     {
         $request->validate([
@@ -133,56 +130,51 @@ class AuthController extends Controller
 
         $tipo = $request->tipo_usuario;
 
-        // 🟢 CLIENTE
         if ($tipo == 'cliente') {
 
-            $user = Cliente::where('email', $request->email)->first();
+            $usuario = Cliente::where('email', $request->email)->first();
 
-            if (!$user) {
+            if (!$usuario) {
                 return back()->with('error', 'Cliente no existe.');
             }
 
-            if (!Hash::check($request->password, $user->password)) {
+            if (!Hash::check($request->password, $usuario->password)) {
                 return back()->with('error', 'Contraseña incorrecta.');
             }
+        } else {
 
-            session([
-                'user' => $user,
-                'tipo_usuario' => 'cliente',
-                'last_activity' => time()
-            ]);
-        }
+            $usuario = Comerciante::where('email', $request->email)->first();
 
-        // 🟢 COMERCIANTE
-        else {
-
-            $user = Comerciante::where('email', $request->email)->first();
-
-            if (!$user) {
+            if (!$usuario) {
                 return back()->with('error', 'Comerciante no existe.');
             }
 
-            if (!Hash::check($request->password, $user->password)) {
+            if (!Hash::check($request->password, $usuario->password)) {
                 return back()->with('error', 'Contraseña incorrecta.');
             }
-
-            session([
-                'user' => $user,
-                'tipo_usuario' => 'comerciante',
-                'last_activity' => time()
-            ]);
         }
+
+        // =========================
+        // SESIÓN CORRECTA USUARIO
+        // =========================
+        session([
+            'usuario' => $usuario,
+            'tipo_usuario' => $tipo,
+            'last_activity_usuario' => time()
+        ]);
 
         return redirect('/plataforma/inicio');
     }
 
-    // 🟢 LOGOUT
+    // =========================
+    // LOGOUT
+    // =========================
     public function logout()
     {
         session()->forget([
-            'user',
-            'last_activity',
-            'tipo_usuario'
+            'usuario',
+            'tipo_usuario',
+            'last_activity_usuario'
         ]);
 
         session()->flush();

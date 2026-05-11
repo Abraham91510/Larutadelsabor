@@ -43,6 +43,10 @@ use App\Http\Controllers\Administrador\BeneficioController;
 use App\Http\Controllers\Administrador\TipoDeServicioController;
 
 
+use App\Http\Controllers\PedidoController;
+
+use App\Http\Controllers\TarjetaClienteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -129,6 +133,47 @@ Route::get('/productos/{categoria?}', [CategoriaController::class, 'Productos'])
 
 Route::get('/subcategorias/{categoria}', [CategoriaController::class, 'SubcategoriasAjax']);
 
+
+Route::post(
+    '/checkout',
+    [PedidoController::class, 'checkout']
+)->name('checkout');
+
+Route::get(
+    '/mis-pedidos',
+    [PedidoController::class, 'misPedidos']
+)->name('mis.pedidos');
+
+Route::get(
+    '/pedido/{id}/qr',
+    [PedidoController::class, 'qrPedido']
+)->name('pedido.qr');
+
+Route::post(
+    '/pedido/{id}/entregar',
+    [PedidoController::class, 'entregar']
+)->name('pedido.entregar');
+
+Route::post(
+    '/carrito/cupon',
+    [CarritoController::class, 'aplicarCupon']
+)->name('carrito.cupon');
+
+
+// Ruta principal (la que llama el menú)
+        Route::get('/tarjeta', [TarjetaClienteController::class, 'index'])
+            ->name('tarjeta.index');
+
+        // Rutas para creación
+        Route::get('/tarjeta/crear', [TarjetaClienteController::class, 'create'])
+            ->name('tarjeta.create');
+
+        Route::post('/tarjeta/guardar', [TarjetaClienteController::class, 'store'])
+            ->name('tarjeta.store');
+
+        // Ruta para recarga
+        Route::post('/tarjeta/recargar', [TarjetaClienteController::class, 'recargar'])
+            ->name('tarjeta.recargar');
     /*
     |--------------------------------------------------------------------------
     | 💬 SOLO CLIENTE
@@ -139,6 +184,8 @@ Route::get('/subcategorias/{categoria}', [CategoriaController::class, 'Subcatego
 
        Route::get('/comentarios', [ComentarioController::class, 'index'])->name('comentarios');
 Route::post('/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+
+
 
 
     });

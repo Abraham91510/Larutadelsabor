@@ -126,25 +126,76 @@ h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; font-weight:
                 </div>
             @endforelse
 
-            {{-- CUPONES --}}
-            <div class="bg-card-gray p-3 mb-3">
-                <h6 class="fw-bold mb-2">🎟 Cupón de descuento</h6>
+           {{-- CUPONES --}}
+<div class="bg-card-gray p-3 mb-3">
 
-                <div class="cupon-box">
-                    <input type="text" class="form-control cupon-input" placeholder="Ingresa tu cupón">
-                    <button class="btn btn-dark">Aplicar</button>
-                </div>
+    <h6 class="fw-bold mb-2">
+        🎟 Cupón de descuento
+    </h6>
 
-                <small class="text-muted d-block mt-2">
-                    💡 Usa códigos como <b>NUEVO26</b>
-                </small>
-            </div>
+    @if(session('cupon'))
+        <div class="alert alert-success">
 
+            Cupón aplicado:
+            <b>{{ session('cupon.codigo') }}</b>
+
+            <br>
+
+            Descuento:
+            ${{ session('cupon')['descuento'] ?? 0}} MXN
+
+        </div>
+    @endif
+
+    <form
+    action="{{ route('carrito.cupon') }}"
+    method="POST"
+>
+
+    @csrf
+
+    <div class="cupon-box">
+
+        <input
+            type="text"
+            name="cupon"
+            class="form-control cupon-input"
+            placeholder="Ingresa tu cupón"
+        >
+
+        <button class="btn btn-dark">
+
+            Aplicar
+
+        </button>
+
+    </div>
+
+</form>
+
+    <small class="text-muted d-block mt-2">
+        💡 Usa códigos como
+        <b>NUEVO26</b>,
+        <b>DESCUENTO50</b>
+    </small>
+
+</div>
             {{-- NOTAS --}}
-            <div class="bg-card-gray p-3">
-                <h6 class="fw-bold">📝 Notas del pedido</h6>
-                <textarea class="form-control mt-2" rows="3"></textarea>
-            </div>
+<div class="bg-card-gray p-3">
+
+    <h6 class="fw-bold">
+        📝 Notas del pedido
+    </h6>
+
+    <textarea
+        name="nota"
+        form="formCheckout"
+        class="form-control mt-2"
+        rows="3"
+        placeholder="Ejemplo: sin cebolla, entregar rápido..."
+    ></textarea>
+
+</div>
 
         </div>
 
@@ -152,8 +203,14 @@ h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; font-weight:
         <div class="col-lg-4">
 
             @php
-                $descuento = 0;
-                $total = $subtotal - $descuento;
+                $descuento = session('cupon.descuento', 0);
+
+$total = $subtotal - $descuento;
+
+if($total < 0)
+{
+    $total = 0;
+}
             @endphp
 
             <div class="bg-card-gray p-4">
@@ -182,9 +239,35 @@ h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; font-weight:
                     <span>${{ $total }} MXN</span>
                 </div>
 
-                <button class="btn btn-orange w-100 mt-3 rounded-pill py-2">
-                    Proceder al pago
-                </button>
+                <form
+    id="formCheckout"
+    action="{{ route('checkout') }}"
+    method="POST"
+>
+
+@csrf
+
+{{-- TEMPORIZADOR --}}
+
+<div class="alert alert-danger text-center mt-3">
+
+    <h6 class="fw-bold mb-2">
+        Tiempo restante para pagar
+    </h6>
+
+    <h2 id="contadorCompra">
+        03:00
+    </h2>
+
+</div>
+
+<button class="btn btn-orange w-100 mt-3 rounded-pill py-2">
+
+    Proceder al pago
+
+</button>
+
+</form>
 
                 <a href="{{ route('productos') }}" class="btn btn-dark w-100 mt-2 rounded-pill py-2">
                     Seguir comprando
@@ -207,5 +290,75 @@ h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif !important; font-weight:
     </div>
 
 </div>
+
+
+<script>
+/*
+|----------------------------------------------------------------------
+| LÓGICA DEL TEMPORIZADOR (MODIFICADA)
+|----------------------------------------------------------------------
+*/
+
+// Checamos desde PHP si el carrito tiene productos
+// Si está vacío, esta variable será 'true'
+let carritoVacio = {{ empty(session('carrito')) ? 'true' : 'false' }};
+
+if (carritoVacio) {
+    // Si el carrito está vacío, no queremos que corra el tiempo
+    // Limpiamos el almacenamiento para que reinicie en 3 min la próxima vez
+    localStorage.removeItem('tiempoCompra');
+    
+    let contador = document.getElementById('contadorCompra');
+    if(contador) {
+        contador.innerHTML = "00:00";
+    }
+} else {
+    // SI HAY PRODUCTOS, EJECUTAMOS TU CÓDIGO ORIGINAL
+    let tiempoGuardado = localStorage.getItem('tiempoCompra');
+
+    let tiempo = tiempoGuardado
+        ? parseInt(tiempoGuardado)
+        : 180;
+
+    let contador = document.getElementById('contadorCompra');
+
+    let temporizador = setInterval(function(){
+
+        let minutos = Math.floor(tiempo / 60);
+        let segundos = tiempo % 60;
+
+        minutos = minutos < 10 ? '0' + minutos : minutos;
+        segundos = segundos < 10 ? '0' + segundos : segundos;
+
+        if(contador) {
+            contador.innerHTML = minutos + ':' + segundos;
+        }
+
+        localStorage.setItem('tiempoCompra', tiempo);
+        tiempo--;
+
+        if(tiempo < 0) {
+            clearInterval(temporizador);
+            localStorage.removeItem('tiempoCompra');
+            alert('El tiempo para pagar expiró');
+            window.location.href = "{{ route('carrito') }}";
+        }
+
+    }, 1000);
+}
+
+/*
+|----------------------------------------------------------------------
+| TUS OTRAS FUNCIONES (SE MANTIENEN IGUAL)
+|----------------------------------------------------------------------
+*/
+
+let formCheck = document.getElementById('formCheckout');
+if(formCheck) {
+    formCheck.addEventListener('submit', function(){
+        localStorage.removeItem('tiempoCompra');
+    });
+}
+</script>
 
 @endsection
